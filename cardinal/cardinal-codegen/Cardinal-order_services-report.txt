@@ -1,0 +1,98 @@
+Cardinal Partition Analysis Report (v2.0.0r29)
+
+# ******************************************************* #
+# Partition order_services contains the following classes #
+# ******************************************************* #
+    └─ OrderDataBean
+
+
+# ****************************************************************** #
+# Partition order_services has the following external-facing classes #
+# (other partitions invoke these methods)                            #
+# ****************************************************************** #
+    └─ OrderDataBean **Persistence** <--
+        implements: Serializable
+         ├─ .OrderDataBean [overloaded_#001]
+         ├─ .OrderDataBean [overloaded_#003]
+         ├─ .getAccount
+         ├─ .getCompletionDate
+         ├─ .getHolding
+         ├─ .getOpenDate
+         ├─ .getOrderFee
+         ├─ .getOrderID
+         ├─ .getOrderStatus
+         ├─ .getOrderType
+         ├─ .getPrice
+         ├─ .getQuantity
+         ├─ .getQuote
+         ├─ .getSymbol
+         ├─ .hashCode
+         ├─ .isBuy
+         ├─ .isCompleted
+         ├─ .isSell
+         ├─ .setCompletionDate
+         ├─ .setHolding
+         └─ .setOrderStatus
+
+
+# ******************************************************************** #
+# Non-primitive object parameters accepted by Partition order_services #
+# on its service interfaces                                            #
+# ******************************************************************** #
+    ├─ <---{ AccountDataBean }---
+    │    ├─ OrderDataBean.OrderDataBean [overloaded_#003]
+    │    └─ OrderDataBean.getAccount
+    │
+    ├─ <---{ BigDecimal }---
+    │    ├─ OrderDataBean.OrderDataBean [overloaded_#003]
+    │    ├─ OrderDataBean.getOrderFee
+    │    └─ OrderDataBean.getPrice
+    │
+    ├─ <---{ Date }---
+    │    ├─ OrderDataBean.OrderDataBean [overloaded_#003]
+    │    ├─ OrderDataBean.getCompletionDate
+    │    ├─ OrderDataBean.getOpenDate
+    │    └─ OrderDataBean.setCompletionDate
+    │
+    ├─ <---{ HoldingDataBean }---
+    │    ├─ OrderDataBean.OrderDataBean [overloaded_#003]
+    │    ├─ OrderDataBean.getHolding
+    │    └─ OrderDataBean.setHolding
+    │
+    ├─ <---{ Integer }---
+    │    └─ OrderDataBean.getOrderID
+    │
+    └─ <---{ QuoteDataBean }---
+         ├─ OrderDataBean.OrderDataBean [overloaded_#003]
+         └─ OrderDataBean.getQuote
+
+
+# ************************************************************************************** #
+# Partition order_services calls to the following class.method outside of this partition #
+# ************************************************************************************** #
+    └───> QuoteDataBean ----<<Partition quote_service>>
+            └─ .getSymbol
+
+
+# *********************************************************************** #
+# Partition order_services holds reference to the following class objects #
+# residing outside this partition, but has no runtime invocations         #
+# *********************************************************************** #
+    ├───> AccountDataBean
+    │       ├─ OrderDataBean
+    │       ├─ OrderDataBean.OrderDataBean [overloaded_#003]
+    │       ├─ OrderDataBean.getAccount
+    │       └─ OrderDataBean.setAccount
+    │
+    ├───> HoldingDataBean
+    │       ├─ OrderDataBean
+    │       ├─ OrderDataBean.OrderDataBean [overloaded_#003]
+    │       ├─ OrderDataBean.getHolding
+    │       └─ OrderDataBean.setHolding
+    │
+    └───> QuoteDataBean
+            ├─ OrderDataBean
+            ├─ OrderDataBean.OrderDataBean [overloaded_#003]
+            ├─ OrderDataBean.getQuote
+            └─ OrderDataBean.setQuote
+

@@ -1,0 +1,1320 @@
+{
+    "version": "v2.0.0r8",
+    "cardinal_modified": {
+        "nodes": [
+            {
+                "name": "OrdersAlertFilter",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/OrdersAlertFilter.java",
+                "semantics": [
+                    "Unknown",
+                    "Quotes",
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "Login",
+                    "BUY",
+                    "CONFIG",
+                    "Market_Summary",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "TradeConfig",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/util/TradeConfig.java",
+                "semantics": [
+                    "Unknown",
+                    "Quotes",
+                    "CONFIG",
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "Login",
+                    "BUY",
+                    "Market_Summary",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "TradeAction",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/TradeAction.java",
+                "semantics": [
+                    "Unknown",
+                    "Quotes",
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "Login",
+                    "BUY",
+                    "Market_Summary",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "Log",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/util/Log.java",
+                "semantics": [
+                    "Unknown",
+                    "Quotes",
+                    "CONFIG",
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "Login",
+                    "BUY",
+                    "Market_Summary",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "TradeSLSBBean",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/ejb3/TradeSLSBBean.java",
+                "semantics": [
+                    "Unknown",
+                    "Quotes",
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "BUY",
+                    "Login",
+                    "Market_Summary",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "OrderDataBean",
+                "group": 1,
+                "category": "order-services",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/entities/OrderDataBean.java",
+                "semantics": [
+                    "Unknown",
+                    "SELL",
+                    "BUY",
+                    "Login",
+                    "Market_Summary"
+                ]
+            },
+            {
+                "name": "QuoteDataBean",
+                "group": 2,
+                "category": "quote-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/entities/QuoteDataBean.java",
+                "semantics": [
+                    "Unknown",
+                    "Account",
+                    "Quotes",
+                    "SELL",
+                    "Home",
+                    "BUY",
+                    "Login",
+                    "Market_Summary",
+                    "CONFIG",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "TradeAppServlet",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/TradeAppServlet.java",
+                "semantics": [
+                    "Unknown",
+                    "Quotes",
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "Login",
+                    "BUY",
+                    "Market_Summary",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "TradeServletAction",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/TradeServletAction.java",
+                "semantics": [
+                    "Unknown",
+                    "Quotes",
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "Login",
+                    "BUY",
+                    "Market_Summary",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "HoldingDataBean",
+                "group": 3,
+                "category": "holding-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/entities/HoldingDataBean.java",
+                "semantics": [
+                    "Unknown",
+                    "SELL",
+                    "Home",
+                    "BUY",
+                    "Login",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "FinancialUtils",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/util/FinancialUtils.java",
+                "semantics": [
+                    "Unknown",
+                    "Account",
+                    "Quotes",
+                    "SELL",
+                    "Home",
+                    "BUY",
+                    "Login",
+                    "Market_Summary",
+                    "CONFIG",
+                    "Portfolio"
+                ]
+            },
+            {
+                "name": "TradeWebContextListener",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/TradeWebContextListener.java",
+                "semantics": [
+                    "Unknown"
+                ]
+            },
+            {
+                "name": "MarketSummarySingleton",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/ejb3/MarketSummarySingleton.java",
+                "semantics": [
+                    "Unknown",
+                    "Account",
+                    "CONFIG",
+                    "Market_Summary"
+                ]
+            },
+            {
+                "name": "MarketSummaryDataBean",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/beans/MarketSummaryDataBean.java",
+                "semantics": [
+                    "Unknown",
+                    "Account",
+                    "CONFIG",
+                    "Market_Summary"
+                ]
+            },
+            {
+                "name": "ActionDecoder",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/websocket/ActionDecoder.java",
+                "semantics": [
+                    "Unknown",
+                    "CONFIG",
+                    "Market_Summary"
+                ]
+            },
+            {
+                "name": "ActionMessage",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/websocket/ActionMessage.java",
+                "semantics": [
+                    "Unknown",
+                    "Market_Summary"
+                ]
+            },
+            {
+                "name": "MarketSummaryWebSocket",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/websocket/MarketSummaryWebSocket.java",
+                "semantics": [
+                    "Unknown",
+                    "CONFIG",
+                    "SELL",
+                    "Market_Summary",
+                    "BUY"
+                ]
+            },
+            {
+                "name": "RecentStockChangeList",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/websocket/RecentStockChangeList.java",
+                "semantics": [
+                    "Unknown",
+                    "SELL",
+                    "Market_Summary",
+                    "BUY"
+                ]
+            },
+            {
+                "name": "TradeConfigServlet",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/TradeConfigServlet.java",
+                "semantics": [
+                    "CONFIG"
+                ]
+            },
+            {
+                "name": "AccountProfileDataBean",
+                "group": 5,
+                "category": "account-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/entities/AccountProfileDataBean.java",
+                "semantics": [
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "BUY",
+                    "Unknown",
+                    "Login"
+                ]
+            },
+            {
+                "name": "AccountDataBean",
+                "group": 5,
+                "category": "account-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/entities/AccountDataBean.java",
+                "semantics": [
+                    "SELL",
+                    "Account",
+                    "Home",
+                    "BUY",
+                    "Unknown",
+                    "Login"
+                ]
+            },
+            {
+                "name": "DTStreamer3MDB",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/ejb3/DTStreamer3MDB.java",
+                "semantics": [
+                    "SELL",
+                    "BUY"
+                ]
+            },
+            {
+                "name": "MDBStats",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/util/MDBStats.java",
+                "semantics": [
+                    "SELL",
+                    "BUY"
+                ]
+            },
+            {
+                "name": "TimerStat",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/util/TimerStat.java",
+                "semantics": [
+                    "SELL",
+                    "BUY"
+                ]
+            },
+            {
+                "name": "RunStatsDataBean",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/beans/RunStatsDataBean.java",
+                "semantics": []
+            },
+            {
+                "name": "KeyBlock",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-ejb/src/main/java/com/ibm/websphere/samples/daytrader/util/KeyBlock.java",
+                "semantics": []
+            },
+            {
+                "name": "TradeDbUtils",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/TradeDbUtils.java",
+                "semantics": []
+            },
+            {
+                "name": "TradeScenarioServlet",
+                "group": 0,
+                "category": "frontend-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/TradeScenarioServlet.java",
+                "semantics": []
+            },
+            {
+                "name": "JsonDecoder",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/websocket/JsonDecoder.java",
+                "semantics": []
+            },
+            {
+                "name": "JsonEncoder",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/websocket/JsonEncoder.java",
+                "semantics": []
+            },
+            {
+                "name": "JsonMessage",
+                "group": 4,
+                "category": "marketsummary-service",
+                "construct": "Class",
+                "FQCN": "",
+                "filepath": "Class, sample.daytrader7.simple/daytrader-ee7-web/src/main/java/com/ibm/websphere/samples/daytrader/web/websocket/JsonMessage.java",
+                "semantics": []
+            }
+        ],
+        "links": [
+            {
+                "source": "OrdersAlertFilter",
+                "target": "TradeConfig",
+                "method": {
+                    "getDisplayOrderAlerts": 10
+                },
+                "value": 3.302
+            },
+            {
+                "source": "OrdersAlertFilter",
+                "target": "TradeAction",
+                "method": {
+                    "TradeAction [overloaded_#001]": 9,
+                    "getClosedOrders": 9
+                },
+                "value": 3.89
+            },
+            {
+                "source": "OrdersAlertFilter",
+                "target": "Log",
+                "method": {
+                    "doTrace": 9
+                },
+                "value": 3.197
+            },
+            {
+                "source": "OrdersAlertFilter",
+                "target": "TradeAppServlet",
+                "method": {
+                    "doGet": 9,
+                    "init": 1,
+                    "doPost": 1
+                },
+                "value": 3.397
+            },
+            {
+                "source": "OrdersAlertFilter",
+                "target": "MarketSummaryWebSocket",
+                "method": {
+                    "onClose": 1
+                },
+                "value": 1.0
+            },
+            {
+                "source": "OrdersAlertFilter",
+                "target": "ActionDecoder",
+                "method": {
+                    "destroy": 1
+                },
+                "value": 1.0
+            },
+            {
+                "source": "TradeAction",
+                "target": "Log",
+                "method": {
+                    "doTrace": 31,
+                    "doActionTrace": 35
+                },
+                "value": 5.189
+            },
+            {
+                "source": "TradeAction",
+                "target": "TradeSLSBBean",
+                "method": {
+                    "getClosedOrders": 9,
+                    "getHoldings": 4,
+                    "getQuote": 8,
+                    "getMarketSummary": 3,
+                    "sell": 1,
+                    "updateQuotePriceVolume": 2,
+                    "getAccountData": 3,
+                    "getAccountProfileData": 1,
+                    "buy": 1,
+                    "TradeSLSBBean": 1,
+                    "postConstruct": 1,
+                    "login": 1
+                },
+                "value": 4.555
+            },
+            {
+                "source": "TradeAction",
+                "target": "AccountDataBean",
+                "method": {
+                    "hashCode": 18
+                },
+                "value": 3.89
+            },
+            {
+                "source": "TradeAction",
+                "target": "OrderDataBean",
+                "method": {
+                    "getOrderStatus": 1,
+                    "getSymbol": 1,
+                    "getQuantity": 1
+                },
+                "value": 2.098
+            },
+            {
+                "source": "TradeAction",
+                "target": "TradeConfig",
+                "method": {
+                    "getRandomPriceChangeFactor": 2
+                },
+                "value": 1.693
+            },
+            {
+                "source": "TradeAction",
+                "target": "QuoteDataBean",
+                "method": {
+                    "hashCode": 16
+                },
+                "value": 3.772
+            },
+            {
+                "source": "Log",
+                "target": "TradeConfig",
+                "method": {
+                    "getTrace": 156,
+                    "getActionTrace": 35,
+                    "setTrace": 1,
+                    "setActionTrace": 1
+                },
+                "value": 6.262
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "Log",
+                "method": {
+                    "doTrace": 46
+                },
+                "value": 4.828
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "OrderDataBean",
+                "method": {
+                    "OrderDataBean [overloaded_#001]": 3,
+                    "OrderDataBean [overloaded_#003]": 2,
+                    "hashCode": 8,
+                    "getOrderFee": 2,
+                    "getOrderID": 2,
+                    "getQuote": 4,
+                    "isCompleted": 2,
+                    "getAccount": 2,
+                    "getHolding": 2,
+                    "getPrice": 2,
+                    "getQuantity": 2,
+                    "isBuy": 2,
+                    "isSell": 2,
+                    "setHolding": 2,
+                    "setOrderStatus": 2,
+                    "setCompletionDate": 2
+                },
+                "value": 4.713
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "QuoteDataBean",
+                "method": {
+                    "QuoteDataBean [overloaded_#003]": 20,
+                    "getPrice": 10,
+                    "getOpen": 4,
+                    "setPrice": 2,
+                    "setChange": 2,
+                    "getVolume": 4,
+                    "setVolume": 2,
+                    "getSymbol": 4,
+                    "getCompanyName": 2,
+                    "getLow": 2,
+                    "getHigh": 2
+                },
+                "value": 4.988
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "TradeConfig",
+                "method": {
+                    "getLongRun": 3,
+                    "getOrderFee": 2,
+                    "getUpdateQuotePrices": 2,
+                    "getPublishQuotePriceChange": 2
+                },
+                "value": 3.197
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "HoldingDataBean",
+                "method": {
+                    "HoldingDataBean [overloaded_#001]": 6,
+                    "getQuote": 1,
+                    "getQuantity": 1,
+                    "setPurchaseDate": 1,
+                    "HoldingDataBean [overloaded_#003]": 1,
+                    "hashCode": 4
+                },
+                "value": 3.639
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "MarketSummarySingleton",
+                "method": {
+                    "getMarketSummaryDataBean": 3
+                },
+                "value": 2.098
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "AccountProfileDataBean",
+                "method": {
+                    "AccountProfileDataBean [overloaded_#001]": 7,
+                    "getAccount": 6,
+                    "getUserID": 5
+                },
+                "value": 3.89
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "AccountDataBean",
+                "method": {
+                    "getBalance": 2,
+                    "setBalance": 2,
+                    "getProfile": 2,
+                    "setProfileID": 3,
+                    "login": 1
+                },
+                "value": 3.302
+            },
+            {
+                "source": "TradeSLSBBean",
+                "target": "TradeAction",
+                "method": {
+                    "TradeAction [overloaded_#001]": 2,
+                    "orderCompleted": 2
+                },
+                "value": 2.386
+            },
+            {
+                "source": "OrderDataBean",
+                "target": "QuoteDataBean",
+                "method": {
+                    "getSymbol": 8
+                },
+                "value": 3.079
+            },
+            {
+                "source": "TradeAppServlet",
+                "target": "TradeServletAction",
+                "method": {
+                    "TradeServletAction": 10,
+                    "doPortfolio": 2,
+                    "doQuotes": 1,
+                    "doSell": 1,
+                    "doAccount": 1,
+                    "doHome": 1,
+                    "doWelcome": 1,
+                    "doBuy": 1,
+                    "doLogin": 1,
+                    "doMarketSummary": 1
+                },
+                "value": 3.995
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "TradeAction",
+                "method": {
+                    "TradeAction [overloaded_#001]": 15,
+                    "getHoldings": 4,
+                    "getQuote": 8,
+                    "sell [overloaded_#004]": 1,
+                    "getAccountData": 3,
+                    "getAccountProfileData": 1,
+                    "buy": 1,
+                    "login": 1
+                },
+                "value": 4.526
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "HoldingDataBean",
+                "method": {
+                    "getQuoteID": 9,
+                    "getPurchasePrice": 6,
+                    "getQuantity": 9,
+                    "getHoldingID": 6,
+                    "getPurchaseDate": 3
+                },
+                "value": 4.496
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "TradeConfig",
+                "method": {
+                    "getPage": 10,
+                    "getLongRun": 1
+                },
+                "value": 3.397
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "OrderDataBean",
+                "method": {
+                    "getOrderID": 9,
+                    "getOrderStatus": 5,
+                    "getOpenDate": 5,
+                    "getCompletionDate": 5,
+                    "getOrderFee": 5,
+                    "getOrderType": 7,
+                    "getSymbol": 7,
+                    "getQuantity": 7
+                },
+                "value": 4.912
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "FinancialUtils",
+                "method": {
+                    "printQuoteLink": 13,
+                    "printGainHTML": 12,
+                    "computeGainPercent": 9,
+                    "printGainPercentHTML": 9,
+                    "computeHoldingsTotal": 2,
+                    "computeGain": 2
+                },
+                "value": 4.85
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "QuoteDataBean",
+                "method": {
+                    "getSymbol": 13,
+                    "getPrice": 16,
+                    "getCompanyName": 5,
+                    "getVolume": 5,
+                    "getLow": 5,
+                    "getHigh": 5,
+                    "getOpen": 10,
+                    "getChange": 5
+                },
+                "value": 5.158
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "AccountDataBean",
+                "method": {
+                    "getCreationDate": 3,
+                    "getLastLogin": 1,
+                    "getAccountID": 3,
+                    "getLoginCount": 3,
+                    "getBalance": 3,
+                    "getProfileID": 3,
+                    "getLogoutCount": 1,
+                    "getOpenBalance": 3
+                },
+                "value": 3.995
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "AccountProfileDataBean",
+                "method": {
+                    "getUserID": 1,
+                    "getFullName": 1,
+                    "getPassword": 2,
+                    "getAddress": 1,
+                    "getCreditCard": 1,
+                    "getEmail": 1
+                },
+                "value": 2.945
+            },
+            {
+                "source": "TradeServletAction",
+                "target": "Log",
+                "method": {
+                    "log [overloaded_#001]": 1
+                },
+                "value": 1.0
+            },
+            {
+                "source": "HoldingDataBean",
+                "target": "QuoteDataBean",
+                "method": {
+                    "getSymbol": 9
+                },
+                "value": 3.197
+            },
+            {
+                "source": "FinancialUtils",
+                "target": "HoldingDataBean",
+                "method": {
+                    "getPurchasePrice": 2,
+                    "getQuantity": 2
+                },
+                "value": 2.386
+            },
+            {
+                "source": "TradeWebContextListener",
+                "target": "Log",
+                "method": {
+                    "trace [overloaded_#0011]": 2
+                },
+                "value": 1.693
+            },
+            {
+                "source": "TradeWebContextListener",
+                "target": "TradeConfig",
+                "method": {
+                    "setRunTimeMode": 1,
+                    "setOrderProcessingMode": 1,
+                    "setWebInterface": 1,
+                    "setMAX_USERS": 1,
+                    "setMAX_QUOTES": 1,
+                    "setMarketSummaryInterval": 1,
+                    "setPrimIterations": 1,
+                    "setPublishQuotePriceChange": 1,
+                    "setPercentSentToWebsocket": 1,
+                    "setDisplayOrderAlerts": 1,
+                    "setLongRun": 1,
+                    "setTrace": 1,
+                    "setActionTrace": 1
+                },
+                "value": 3.564
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "Log",
+                "method": {
+                    "doTrace": 14
+                },
+                "value": 3.639
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "TradeConfig",
+                "method": {
+                    "getRunTimeMode": 14
+                },
+                "value": 3.639
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "QuoteDataBean",
+                "method": {
+                    "QuoteDataBean [overloaded_#003]": 14002,
+                    "getPrice": 13599,
+                    "getOpen": 13599,
+                    "getVolume": 13598
+                },
+                "value": 11.911
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "MarketSummaryDataBean",
+                "method": {
+                    "MarketSummaryDataBean [overloaded_#002]": 13
+                },
+                "value": 3.564
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "ActionDecoder",
+                "method": {
+                    "willDecode": 1,
+                    "init": 1,
+                    "decode": 1
+                },
+                "value": 2.098
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "MarketSummaryWebSocket",
+                "method": {
+                    "sendMarketSummary": 1
+                },
+                "value": 1.0
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "AccountDataBean",
+                "method": {
+                    "AccountDataBean [overloaded_#001]": 2
+                },
+                "value": 1.693
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "AccountProfileDataBean",
+                "method": {
+                    "AccountProfileDataBean [overloaded_#001]": 2
+                },
+                "value": 1.693
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "HoldingDataBean",
+                "method": {
+                    "HoldingDataBean [overloaded_#001]": 2
+                },
+                "value": 1.693
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "OrderDataBean",
+                "method": {
+                    "OrderDataBean [overloaded_#001]": 2
+                },
+                "value": 1.693
+            },
+            {
+                "source": "MarketSummarySingleton",
+                "target": "TradeConfigServlet",
+                "method": {
+                    "init": 1,
+                    "service": 1
+                },
+                "value": 1.693
+            },
+            {
+                "source": "MarketSummaryDataBean",
+                "target": "FinancialUtils",
+                "method": {
+                    "computeGainPercent": 14
+                },
+                "value": 3.639
+            },
+            {
+                "source": "MarketSummaryDataBean",
+                "target": "QuoteDataBean",
+                "method": {
+                    "getSymbol": 30,
+                    "getPrice": 30,
+                    "getChange": 30
+                },
+                "value": 5.499
+            },
+            {
+                "source": "ActionDecoder",
+                "target": "Log",
+                "method": {
+                    "doTrace": 3
+                },
+                "value": 2.098
+            },
+            {
+                "source": "ActionDecoder",
+                "target": "ActionMessage",
+                "method": {
+                    "ActionMessage": 3,
+                    "doDecoding": 3
+                },
+                "value": 2.791
+            },
+            {
+                "source": "ActionMessage",
+                "target": "Log",
+                "method": {
+                    "doTrace": 3
+                },
+                "value": 2.098
+            },
+            {
+                "source": "MarketSummaryWebSocket",
+                "target": "ActionMessage",
+                "method": {
+                    "getDecodedAction": 3
+                },
+                "value": 2.098
+            },
+            {
+                "source": "MarketSummaryWebSocket",
+                "target": "Log",
+                "method": {
+                    "doTrace": 10
+                },
+                "value": 3.302
+            },
+            {
+                "source": "MarketSummaryWebSocket",
+                "target": "TradeAction",
+                "method": {
+                    "TradeAction [overloaded_#001]": 3,
+                    "getMarketSummary": 3
+                },
+                "value": 2.791
+            },
+            {
+                "source": "MarketSummaryWebSocket",
+                "target": "MarketSummaryDataBean",
+                "method": {
+                    "toJson": 3
+                },
+                "value": 2.098
+            },
+            {
+                "source": "MarketSummaryWebSocket",
+                "target": "RecentStockChangeList",
+                "method": {
+                    "isEmpty": 3,
+                    "stockChangesInJSON": 5,
+                    "addStockChange": 2
+                },
+                "value": 3.302
+            },
+            {
+                "source": "TradeConfigServlet",
+                "target": "TradeConfig",
+                "method": {
+                    "setRunTimeMode": 1,
+                    "setOrderProcessingMode": 1,
+                    "setWebInterface": 1,
+                    "setMAX_USERS": 1,
+                    "setMAX_QUOTES": 1,
+                    "getMAX_USERS": 3,
+                    "getMAX_QUOTES": 3,
+                    "setMarketSummaryInterval": 1,
+                    "getMarketSummaryInterval": 3,
+                    "setPrimIterations": 1,
+                    "getPrimIterations": 3,
+                    "setPublishQuotePriceChange": 1,
+                    "getPublishQuotePriceChange": 3,
+                    "setPercentSentToWebsocket": 1,
+                    "getPercentSentToWebsocket": 3,
+                    "setLongRun": 1,
+                    "getLongRun": 3,
+                    "setDisplayOrderAlerts": 1,
+                    "getDisplayOrderAlerts": 3,
+                    "getTrace": 3,
+                    "getActionTrace": 3,
+                    "getPage": 2
+                },
+                "value": 4.761
+            },
+            {
+                "source": "TradeConfigServlet",
+                "target": "Log",
+                "method": {
+                    "setTrace": 1,
+                    "setActionTrace": 1
+                },
+                "value": 1.693
+            },
+            {
+                "source": "AccountProfileDataBean",
+                "target": "AccountDataBean",
+                "method": {
+                    "AccountDataBean [overloaded_#001]": 6
+                },
+                "value": 2.791
+            },
+            {
+                "source": "AccountDataBean",
+                "target": "AccountProfileDataBean",
+                "method": {
+                    "getPassword": 1
+                },
+                "value": 1.0
+            },
+            {
+                "source": "DTStreamer3MDB",
+                "target": "Log",
+                "method": {
+                    "doTrace": 5
+                },
+                "value": 2.609
+            },
+            {
+                "source": "DTStreamer3MDB",
+                "target": "MDBStats",
+                "method": {
+                    "addTiming": 2,
+                    "getInstance": 1
+                },
+                "value": 2.098
+            },
+            {
+                "source": "DTStreamer3MDB",
+                "target": "TimerStat",
+                "method": {
+                    "getCount": 2
+                },
+                "value": 1.693
+            },
+            {
+                "source": "DTStreamer3MDB",
+                "target": "TradeConfig",
+                "method": {
+                    "getMAX_QUOTES": 2,
+                    "getPercentSentToWebsocket": 2
+                },
+                "value": 2.386
+            },
+            {
+                "source": "DTStreamer3MDB",
+                "target": "MarketSummaryWebSocket",
+                "method": {
+                    "onJMSMessage": 2
+                },
+                "value": 1.693
+            },
+            {
+                "source": "MDBStats",
+                "target": "TimerStat",
+                "method": {
+                    "getMax": 2,
+                    "getMin": 2,
+                    "setMin": 2,
+                    "getCount": 2,
+                    "setCount": 2,
+                    "getTotalTime": 2,
+                    "setTotalTime": 2,
+                    "setMax": 1
+                },
+                "value": 3.708
+            }
+        ],
+        "overview": {
+            "nodes": [
+                {
+                    "name": "frontend-service",
+                    "group": 0,
+                    "category": "frontend-service",
+                    "filepath": "Cluster",
+                    "semantics": [
+                        "Unknown",
+                        "Quotes",
+                        "SELL",
+                        "Account",
+                        "Home",
+                        "Login",
+                        "BUY",
+                        "CONFIG",
+                        "Market_Summary",
+                        "Portfolio"
+                    ]
+                },
+                {
+                    "name": "order-services",
+                    "group": 1,
+                    "category": "order-services",
+                    "filepath": "Cluster",
+                    "semantics": [
+                        "Unknown",
+                        "SELL",
+                        "BUY",
+                        "Login",
+                        "Market_Summary"
+                    ]
+                },
+                {
+                    "name": "quote-service",
+                    "group": 2,
+                    "category": "quote-service",
+                    "filepath": "Cluster",
+                    "semantics": [
+                        "Unknown",
+                        "Account",
+                        "Quotes",
+                        "SELL",
+                        "Home",
+                        "BUY",
+                        "Login",
+                        "Market_Summary",
+                        "CONFIG",
+                        "Portfolio"
+                    ]
+                },
+                {
+                    "name": "holding-service",
+                    "group": 3,
+                    "category": "holding-service",
+                    "filepath": "Cluster",
+                    "semantics": [
+                        "Unknown",
+                        "SELL",
+                        "Home",
+                        "BUY",
+                        "Login",
+                        "Portfolio"
+                    ]
+                },
+                {
+                    "name": "marketsummary-service",
+                    "group": 4,
+                    "category": "marketsummary-service",
+                    "filepath": "Cluster",
+                    "semantics": [
+                        "Unknown",
+                        "Account",
+                        "CONFIG",
+                        "Market_Summary",
+                        "SELL",
+                        "BUY"
+                    ]
+                },
+                {
+                    "name": "account-service",
+                    "group": 5,
+                    "category": "account-service",
+                    "filepath": "Cluster",
+                    "semantics": [
+                        "SELL",
+                        "Account",
+                        "Home",
+                        "BUY",
+                        "Unknown",
+                        "Login"
+                    ]
+                }
+            ],
+            "links": [
+                {
+                    "source": "frontend-service",
+                    "target": "marketsummary-service",
+                    "value": 1.551
+                },
+                {
+                    "source": "frontend-service",
+                    "target": "account-service",
+                    "value": 2.06
+                },
+                {
+                    "source": "frontend-service",
+                    "target": "order-services",
+                    "value": 1.85
+                },
+                {
+                    "source": "frontend-service",
+                    "target": "quote-service",
+                    "value": 1.931
+                },
+                {
+                    "source": "frontend-service",
+                    "target": "holding-service",
+                    "value": 1.801
+                },
+                {
+                    "source": "order-services",
+                    "target": "quote-service",
+                    "value": 1.324
+                },
+                {
+                    "source": "holding-service",
+                    "target": "quote-service",
+                    "value": 1.337
+                },
+                {
+                    "source": "marketsummary-service",
+                    "target": "frontend-service",
+                    "value": 2.187
+                },
+                {
+                    "source": "marketsummary-service",
+                    "target": "quote-service",
+                    "value": 2.042
+                },
+                {
+                    "source": "marketsummary-service",
+                    "target": "account-service",
+                    "value": 1.356
+                },
+                {
+                    "source": "marketsummary-service",
+                    "target": "holding-service",
+                    "value": 1.14
+                },
+                {
+                    "source": "marketsummary-service",
+                    "target": "order-services",
+                    "value": 1.14
+                }
+            ]
+        }
+    }
+}

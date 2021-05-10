@@ -1,0 +1,26 @@
+version: "3.0"
+
+services:
+
+  daytrader7-frontend-service:
+    build: ./daytrader7-frontend-service
+    image: daytrader7-frontend-service
+    container_name: daytrader7-frontend-service
+    ports:
+      - "9080:9080"
+    environment: 
+      - DB_HOST=db2
+      - DB_PORT=50000
+      - DB_DATABASE=TRADEDB
+      - DB_USER=db2inst1
+      - DB_PASSWORD=db2inst1
+      - APPLICATION_PARTITION_1_REST_URL=http://daytrader7-partition1:9080/daytrader/rest/
+      - APPLICATION_PARTITION_2_REST_URL=http://daytrader7-partition2:9080/daytrader/rest/
+      - APPLICATION_PARTITION_3_REST_URL=http://daytrader7-partition3:9080/daytrader/rest/
+    networks:
+      - daytrader7
+
+networks:
+  daytrader7:
+    external: true
+

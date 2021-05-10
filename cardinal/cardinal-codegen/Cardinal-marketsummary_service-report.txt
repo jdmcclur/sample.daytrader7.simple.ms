@@ -1,0 +1,115 @@
+Cardinal Partition Analysis Report (v2.0.0r29)
+
+# ************************************************************** #
+# Partition marketsummary_service contains the following classes #
+# ************************************************************** #
+    ├─ ActionDecoder
+    ├─ ActionMessage
+    ├─ JsonDecoder
+    ├─ JsonEncoder
+    ├─ JsonMessage
+    ├─ MarketSummaryDataBean
+    ├─ MarketSummarySingleton
+    ├─ MarketSummaryWebSocket
+    └─ RecentStockChangeList
+
+
+# ************************************************************************* #
+# Partition marketsummary_service has the following external-facing classes #
+# (other partitions invoke these methods)                                   #
+# ************************************************************************* #
+    ├─ ActionDecoder <--
+    │   implements: Decoder.Text
+    │    └─ .destroy
+    │
+    ├─ ActionMessage <--
+    │
+    ├─ MarketSummaryDataBean <--
+    │   implements: Serializable
+    │
+    ├─ MarketSummarySingleton <--
+    │    └─ .getMarketSummaryDataBean
+    │
+    └─ MarketSummaryWebSocket **Service Entry** <--
+         ├─ .onClose
+         └─ .onJMSMessage
+
+
+# *************************************************************************** #
+# Non-primitive object parameters accepted by Partition marketsummary_service #
+# on its service interfaces                                                   #
+# *************************************************************************** #
+    ├─ <---{ CloseReason }---
+    │    └─ MarketSummaryWebSocket.onClose
+    │
+    ├─ <---{ MarketSummaryDataBean }---
+    │    └─ MarketSummarySingleton.getMarketSummaryDataBean
+    │
+    ├─ <---{ Message }---
+    │    └─ MarketSummaryWebSocket.onJMSMessage
+    │
+    └─ <---{ Session }---
+         └─ MarketSummaryWebSocket.onClose
+
+
+# ********************************************************************************************* #
+# Partition marketsummary_service calls to the following class.method outside of this partition #
+# ********************************************************************************************* #
+    ├───> AccountDataBean ----<<Partition account_service>>
+    │       └─ .AccountDataBean [overloaded_#001]
+    │
+    ├───> AccountProfileDataBean ----<<Partition account_service>>
+    │       └─ .AccountProfileDataBean [overloaded_#001]
+    │
+    ├───> FinancialUtils ----<<Partition frontend_service>>
+    │       └─ .computeGainPercent
+    │
+    ├───> HoldingDataBean ----<<Partition holding_service>>
+    │       └─ .HoldingDataBean [overloaded_#001]
+    │
+    ├───> Log ----<<Partition frontend_service>>
+    │       └─ .doTrace
+    │
+    ├───> OrderDataBean ----<<Partition order_services>>
+    │       └─ .OrderDataBean [overloaded_#001]
+    │
+    ├───> QuoteDataBean ----<<Partition quote_service>>
+    │       ├─ .QuoteDataBean [overloaded_#003]
+    │       ├─ .getChange
+    │       ├─ .getOpen
+    │       ├─ .getPrice
+    │       ├─ .getSymbol
+    │       └─ .getVolume
+    │
+    ├───> TradeAction ----<<Partition frontend_service>>
+    │       ├─ .TradeAction [overloaded_#001]
+    │       └─ .getMarketSummary
+    │
+    ├───> TradeConfig ----<<Partition frontend_service>>
+    │       └─ .getRunTimeMode
+    │
+    └───> TradeConfigServlet ----<<Partition frontend_service>>
+            ├─ .init
+            └─ .service
+
+
+# ****************************************************************************** #
+# Partition marketsummary_service holds reference to the following class objects #
+# residing outside this partition, but has no runtime invocations                #
+# ****************************************************************************** #
+    ├───> QuoteDataBean
+    │       ├─ MarketSummaryDataBean
+    │       ├─ MarketSummaryDataBean.MarketSummaryDataBean [overloaded_#002]
+    │       ├─ MarketSummaryDataBean.getRandomInstance
+    │       ├─ MarketSummaryDataBean.getTopGainers
+    │       ├─ MarketSummaryDataBean.getTopLosers
+    │       ├─ MarketSummaryDataBean.setTopGainers
+    │       ├─ MarketSummaryDataBean.setTopLosers
+    │       ├─ MarketSummaryDataBean.toHTML
+    │       ├─ MarketSummaryDataBean.toJson
+    │       ├─ MarketSummaryDataBean.toString
+    │       └─ MarketSummarySingleton.updateMarketSummary
+    │
+    └───> TradeAction
+            └─ MarketSummaryWebSocket.sendMarketSummary
+

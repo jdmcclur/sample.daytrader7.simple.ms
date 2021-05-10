@@ -1,0 +1,49 @@
+Cardinal Partition Analysis Report (v2.0.0r29)
+
+# ****************************************************** #
+# Partition quote_service contains the following classes #
+# ****************************************************** #
+    └─ QuoteDataBean
+
+
+# ***************************************************************** #
+# Partition quote_service has the following external-facing classes #
+# (other partitions invoke these methods)                           #
+# ***************************************************************** #
+    └─ QuoteDataBean **Persistence** <--
+        implements: Serializable
+         ├─ .QuoteDataBean [overloaded_#003]
+         ├─ .getChange
+         ├─ .getCompanyName
+         ├─ .getHigh
+         ├─ .getLow
+         ├─ .getOpen
+         ├─ .getPrice
+         ├─ .getSymbol
+         ├─ .getVolume
+         ├─ .hashCode
+         ├─ .setChange
+         ├─ .setPrice
+         └─ .setVolume
+
+
+# ******************************************************************* #
+# Non-primitive object parameters accepted by Partition quote_service #
+# on its service interfaces                                           #
+# ******************************************************************* #
+    └─ <---{ BigDecimal }---
+         ├─ QuoteDataBean.getHigh
+         ├─ QuoteDataBean.getLow
+         ├─ QuoteDataBean.getOpen
+         ├─ QuoteDataBean.getPrice
+         └─ QuoteDataBean.setPrice
+
+
+# ************************************************************************************* #
+# Partition quote_service calls to the following class.method outside of this partition #
+# ************************************************************************************* #
+
+# ********************************************************************** #
+# Partition quote_service holds reference to the following class objects #
+# residing outside this partition, but has no runtime invocations        #
+# ********************************************************************** #
