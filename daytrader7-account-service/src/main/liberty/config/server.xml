@@ -1,0 +1,31 @@
+<server>
+    <featureManager>
+        <feature>ejbLite-3.2</feature>
+        <feature>jpa-2.2</feature>
+        <feature>microProfile-4.0</feature>
+    </featureManager>
+
+	<!-- allow reuse of 'busy' ports for fast server recycling on linux (where ports remain blocked for up to 2 mins after server stops) ${tradelite.http.port} set in bootstrap.properties --> 
+	<httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"> 
+		<tcpOptions soReuseAddr="true"/> 
+		<httpOptions maxKeepAliveRequests="-1"/>
+	</httpEndpoint>
+		
+  <webApplication name="daytrader7-account-service" location="daytrader7-account-service-1.0-SNAPSHOT.war" context-root="/accounts">
+    <!-- enable visibility to third party apis -->
+    <classloader apiTypeVisibility="api,ibm-api,spec,stable,third-party" />
+  </webApplication>
+
+	<connectionManager agedTimeout="-1" connectionTimeout="0" id="conMgr1" maxIdleTime="-1" maxPoolSize="100" minPoolSize="100" purgePolicy="FailingConnectionOnly" reapTime="-1"/> 
+
+	<jdbcDriver id="DerbyEmbedded" libraryRef="DerbyLib"/>
+	<library filesetRef="DerbyFileset" id="DerbyLib"/>
+	<fileset dir="${shared.resource.dir}/DerbyLibs" id="DerbyFileset" includes="derby-10.14.2.0.jar"/>
+
+	<authData id="TradeDataSourceAuthData" password="db_password" user="db_username"/>
+	<authData id="TradeAdminAuthData" password="db_password" user="db_username"/>
+
+	<dataSource connectionManagerRef="conMgr1" id="DefaultDataSource" isolationLevel="TRANSACTION_READ_COMMITTED" jdbcDriverRef="DerbyEmbedded" jndiName="jdbc/TradeDataSource" statementCacheSize="60"> 
+		<properties.derby.embedded createDatabase="create" databaseName="${shared.resource.dir}/data/tradedb" password="db_password" user="db_username"/> 
+	</dataSource>
+</server>

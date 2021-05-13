@@ -1,0 +1,8 @@
+/Users/jdmcclur/mono2micro/cardinal-attempt/daytrader7-holding-service/src/main/java/com/ibm/websphere/samples/daytrader/entities/HoldingDataBean.java
+/Users/jdmcclur/mono2micro/cardinal-attempt/daytrader7-holding-service/src/main/java/com/ibm/websphere/samples/daytrader/util/DBUtil.java
+/Users/jdmcclur/mono2micro/cardinal-attempt/daytrader7-holding-service/src/main/java/com/ibm/websphere/samples/daytrader/rest/HoldingApp.java
+/Users/jdmcclur/mono2micro/cardinal-attempt/daytrader7-holding-service/src/main/java/com/ibm/websphere/samples/daytrader/rest/HoldingRest.java
+/Users/jdmcclur/mono2micro/cardinal-attempt/daytrader7-holding-service/src/main/java/com/ibm/websphere/samples/daytrader/interfaces/HoldingService.java
+/Users/jdmcclur/mono2micro/cardinal-attempt/daytrader7-holding-service/src/main/java/com/ibm/websphere/samples/daytrader/util/Log.java
+/Users/jdmcclur/mono2micro/cardinal-attempt/daytrader7-holding-service/src/main/java/com/ibm/websphere/samples/daytrader/ejb3/HoldingServiceEJBImpl.java
+/Users/jdmcclur/mono2micro/cardinal-attempt/daytrader7-holding-service/src/main/java/com/ibm/websphere/samples/daytrader/rest/DBRest.java
