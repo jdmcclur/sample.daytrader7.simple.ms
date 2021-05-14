@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015, 2021
+ * (C) Copyright IBM Corporation 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,23 @@
 
 package com.ibm.websphere.samples.daytrader.rest;
 
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.AccountService;
+
 import java.math.BigDecimal;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
-import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
-import com.ibm.websphere.samples.daytrader.interfaces.AccountService;
 
 @Path("/")
 @ApplicationScoped
@@ -42,31 +41,30 @@ public class AccountRest {
   @Inject
   AccountService accountService;
 
-  @Path("/getAccountData/{userId}")
   @GET
+  @Path("/getAccountData/{userId}")
   @Produces(MediaType.APPLICATION_JSON)
   public AccountDataBean getAccountData(@PathParam("userId") String userId) throws Exception {
     return accountService.getAccountData(userId);
   }
 
-  @Path("/getAccountProfileData/{userId}")
   @GET
+  @Path("/getAccountProfileData/{userId}")
   @Produces(MediaType.APPLICATION_JSON)
   public AccountProfileDataBean getAccountProfileData(@PathParam("userId") String userId) throws Exception {
     return accountService.getAccountProfileData(userId);
   }
 
-  // TODO - check id?
-  @Path("/updateAccountProfile")
   @POST
+  @Path("/updateAccountProfile")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public AccountProfileDataBean updateAccountProfile(AccountProfileDataBean profileData) throws Exception {
     return accountService.updateAccountProfile(profileData);
   }
 
-  @Path("/updateAccountBalance")
   @POST
+  @Path("/updateAccountBalance")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
   public BigDecimal updateAccountBalance(@FormParam("userId") String userId,
@@ -83,27 +81,27 @@ public class AccountRest {
     return accountService.login(userId, password);
   }
 
-  @Path("/logout")
   @POST
+  @Path("/logout")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
   public void logout(@FormParam("userId") String userId) throws Exception {
     accountService.logout(userId);
   }
 
-  @Path("/register")
   @POST
+  @Path("/register")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
   public AccountDataBean register(@FormParam("userId") String userId, @FormParam("password") String password,
       @FormParam("fullName") String fullName, @FormParam("address") String address, @FormParam("email") String email,
       @FormParam("creditcard") String creditcard, @FormParam("openBalance") BigDecimal openBalance) throws Exception {
-        AccountDataBean account = null;
-        try { 
-          account = accountService.register(userId, password, fullName, address, email, creditcard, openBalance);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
+    AccountDataBean account = null;
+    try {
+      account = accountService.register(userId, password, fullName, address, email, creditcard, openBalance);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     return account;
   }
 

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package com.ibm.websphere.samples.daytrader.web.websocket;
 
-import com.ibm.websphere.samples.daytrader.interfaces.TradeService;
 import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeService;
 import com.ibm.websphere.samples.daytrader.util.Log;
 
 import java.util.Collections;
@@ -41,11 +41,11 @@ import javax.websocket.server.ServerEndpoint;
  * through a CDI event.
  */
 
-@ServerEndpoint(value = "/marketsummary",encoders={MarketSummaryEncoder.class},decoders = ActionDecoder.class)
+@ServerEndpoint(value = "/marketsummary", encoders = { MarketSummaryEncoder.class }, decoders = ActionDecoder.class)
 public class MarketSummaryWebSocket {
 
   @Inject
-  Log Log;
+  Log logService;
 
   @Inject
   TradeService tradeService;
@@ -55,8 +55,8 @@ public class MarketSummaryWebSocket {
 
   @OnOpen
   public void onOpen(final Session session, EndpointConfig ec) {
-    if (Log.doTrace()) {
-      Log.trace("MarketSummaryWebSocket:onOpen -- session -->" + session + "<--");
+    if (logService.doTrace()) {
+      logService.trace("MarketSummaryWebSocket:onOpen -- session -->" + session + "<--");
     }
 
     sessions.add(session);
@@ -68,11 +68,11 @@ public class MarketSummaryWebSocket {
 
     String action = message.getDecodedAction();
 
-    if (Log.doTrace()) {
+    if (logService.doTrace()) {
       if (action != null) {
-        Log.trace("MarketSummaryWebSocket:sendMarketSummary -- received -->" + action + "<--");
+        logService.trace("MarketSummaryWebSocket:sendMarketSummary -- received -->" + action + "<--");
       } else {
-        Log.trace("MarketSummaryWebSocket:sendMarketSummary -- received -->null<--");
+        logService.trace("MarketSummaryWebSocket:sendMarketSummary -- received -->null<--");
       }
     }
 
@@ -82,8 +82,8 @@ public class MarketSummaryWebSocket {
 
         MarketSummaryDataBean marketSummary = tradeService.getMarketSummary();
 
-        if (Log.doTrace()) {
-          Log.trace("MarketSummaryWebSocket:sendMarketSummary -- sending -->" + marketSummary + "<--");
+        if (logService.doTrace()) {
+          logService.trace("MarketSummaryWebSocket:sendMarketSummary -- sending -->" + marketSummary + "<--");
         }
 
         // Make sure onopen is finished
@@ -99,8 +99,8 @@ public class MarketSummaryWebSocket {
 
   @OnError
   public void onError(Throwable t, Session currentSession) {
-    if (Log.doTrace()) {
-      Log.trace("MarketSummaryWebSocket:onError -- session -->" + currentSession + "<--");
+    if (logService.doTrace()) {
+      logService.trace("MarketSummaryWebSocket:onError -- session -->" + currentSession + "<--");
     }
     t.printStackTrace();
   }
@@ -108,8 +108,8 @@ public class MarketSummaryWebSocket {
   @OnClose
   public void onClose(Session session, CloseReason reason) {
 
-    if (Log.doTrace()) {
-      Log.trace("MarketSummaryWebSocket:onClose -- session -->" + session + "<--");
+    if (logService.doTrace()) {
+      logService.trace("MarketSummaryWebSocket:onClose -- session -->" + session + "<--");
     }
 
     sessions.remove(session);

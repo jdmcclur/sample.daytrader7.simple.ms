@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2019.
+ * (C) Copyright IBM Corporation 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.ibm.websphere.samples.daytrader.web.websocket;
+
+import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
 
 import java.util.Iterator;
 
@@ -23,9 +27,6 @@ import javax.json.JsonObjectBuilder;
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
-
-import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
-import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
 
 /**
  * This class takes a list of quotedata (from the RecentQuotePriceChangeList
@@ -38,15 +39,15 @@ public class MarketSummaryEncoder implements Encoder.Text<MarketSummaryDataBean>
 
   public String encode(MarketSummaryDataBean mkSummary) throws EncodeException {
 
-    JsonObjectBuilder jObjectBuilder = jsonObjectFactory.createObjectBuilder();
+    JsonObjectBuilder jsonObjectBuilder = jsonObjectFactory.createObjectBuilder();
 
     int i = 1;
     for (Iterator<QuoteDataBean> iterator = mkSummary.getTopGainers().iterator(); iterator.hasNext();) {
       QuoteDataBean quote = iterator.next();
 
-      jObjectBuilder.add("gainer" + i + "_stock", quote.getSymbol());
-      jObjectBuilder.add("gainer" + i + "_price", "$" + quote.getPrice());
-      jObjectBuilder.add("gainer" + i + "_change", quote.getChange());
+      jsonObjectBuilder.add("gainer" + i + "_stock", quote.getSymbol());
+      jsonObjectBuilder.add("gainer" + i + "_price", "$" + quote.getPrice());
+      jsonObjectBuilder.add("gainer" + i + "_change", quote.getChange());
       i++;
     }
 
@@ -54,17 +55,17 @@ public class MarketSummaryEncoder implements Encoder.Text<MarketSummaryDataBean>
     for (Iterator<QuoteDataBean> iterator = mkSummary.getTopLosers().iterator(); iterator.hasNext();) {
       QuoteDataBean quote = iterator.next();
 
-      jObjectBuilder.add("loser" + i + "_stock", quote.getSymbol());
-      jObjectBuilder.add("loser" + i + "_price", "$" + quote.getPrice());
-      jObjectBuilder.add("loser" + i + "_change", quote.getChange());
+      jsonObjectBuilder.add("loser" + i + "_stock", quote.getSymbol());
+      jsonObjectBuilder.add("loser" + i + "_price", "$" + quote.getPrice());
+      jsonObjectBuilder.add("loser" + i + "_change", quote.getChange());
       i++;
     }
 
-    jObjectBuilder.add("tsia", mkSummary.getTsia());
-    jObjectBuilder.add("volume", mkSummary.getVolume());
-    jObjectBuilder.add("date", mkSummary.getSummaryDate().toString());
+    jsonObjectBuilder.add("tsia", mkSummary.getTsia());
+    jsonObjectBuilder.add("volume", mkSummary.getVolume());
+    jsonObjectBuilder.add("date", mkSummary.getSummaryDate().toString());
 
-    return jObjectBuilder.build().toString();
+    return jsonObjectBuilder.build().toString();
   }
 
   @Override

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ import com.ibm.websphere.samples.daytrader.restclient.HoldingClient;
 import com.ibm.websphere.samples.daytrader.restclient.OrderClient;
 import com.ibm.websphere.samples.daytrader.restclient.QuoteClient;
 
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-
 import java.math.BigDecimal;
 import java.util.Random;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 /**
  * TradeBuildDB uses operations provided by the TradeApplication to (a) create
@@ -42,10 +42,10 @@ import javax.inject.Inject;
 public class DBLoader {
 
   @Inject
-  TradeConfig TradeConfig;
+  TradeConfig configService;
 
   @Inject
-  Log Log;
+  Log logService;
 
   @Inject
   @RestClient
@@ -77,7 +77,7 @@ public class DBLoader {
     String companyName;
     int errorCount = 0; // Give up gracefully after 10 errors
 
-    out.println("<BR>TradeBuildDB: **** Creating " + TradeConfig.getMaxQuotes() + " Quotes ****</BR>");
+    out.println("<BR>TradeBuildDB: **** Creating " + configService.getMaxQuotes() + " Quotes ****</BR>");
     
 
     try {
@@ -85,9 +85,9 @@ public class DBLoader {
       resetTrade(true);
     } catch (Exception e) {
       e.printStackTrace();
-      Log.error(e, "TradeBuildDB: Unable to delete Trade users (uid:0, uid:1, ...) and Trade Quotes (s:0, s:1, ...)");
+      logService.error(e, "TradeBuildDB: Unable to delete Trade users (uid:0, uid:1, ...) and Trade Quotes (s:0, s:1, ...)");
     }
-    for (int i = 0; i < TradeConfig.getMaxQuotes(); i++) {
+    for (int i = 0; i < configService.getMaxQuotes(); i++) {
       symbol = "s:" + i;
       companyName = "S" + i + " Incorporated";
       try {
@@ -103,17 +103,17 @@ public class DBLoader {
         if (errorCount++ >= 10) {
           String error = "Populate Trade DB aborting after 10 create quote errors. Check the EJB datasource configuration. "
               + "Check the log for details <BR><BR> Exception is: <BR> " + e.toString();
-          Log.error(e, error);
+          logService.error(e, error);
           throw e;
         }
       }
     }
     out.println("<BR>");
-    out.println("<BR>**** Registering " + TradeConfig.getMaxUsers() + " Users **** ");
+    out.println("<BR>**** Registering " + configService.getMaxUsers() + " Users **** ");
     errorCount = 0; // reset for user registrations
 
     // Registration is a formal operation in Trade 2.
-    for (int i = 0; i < TradeConfig.getMaxUsers(); i++) {
+    for (int i = 0; i < configService.getMaxUsers(); i++) {
       String userID = "uid:" + i;
       String fullname = randomFullName();
       String email = randomEmail(userID);
@@ -134,7 +134,7 @@ public class DBLoader {
 
           // 0-MAX_HOLDING (inclusive), avg
           // holdings per user = (MAX-0)/2
-          int holdings = randomInt(TradeConfig.getMaxHoldings() + 1);
+          int holdings = randomInt(configService.getMaxHoldings() + 1);
 
           double quantity = 0;
 
@@ -157,7 +157,7 @@ public class DBLoader {
         if (errorCount++ >= 10) {
           String error = "Populate Trade DB aborting after 10 user registration errors. Check the log for details. <BR><BR> Exception is: <BR>"
               + e.toString();
-          Log.error(e, error);
+          logService.error(e, error);
           e.printStackTrace();
           throw e;
          
@@ -197,7 +197,7 @@ public class DBLoader {
   }
 
   private String randomSymbol() {
-    return "s:" + randomInt(TradeConfig.getMaxQuotes() - 1);
+    return "s:" + randomInt(configService.getMaxQuotes() - 1);
   }
 
   private int randomInt(int i) {

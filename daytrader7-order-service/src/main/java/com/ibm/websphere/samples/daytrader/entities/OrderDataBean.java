@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,13 +48,15 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "orderejb.findByQuoteSymbol", query = "SELECT o FROM orderejb o WHERE o.quoteSymbol = :quoteSymbol"),
     @NamedQuery(name = "orderejb.findByHoldingHoldingid", query = "SELECT o FROM orderejb o WHERE o.holdingId = :holdingid"),
     @NamedQuery(name = "orderejb.closedOrders", query = "SELECT o FROM orderejb o WHERE o.orderStatus = 'closed' AND o.accountId  = :userID"),
-    @NamedQuery(name = "orderejb.completeClosedOrders", query = "UPDATE orderejb o SET o.orderStatus = 'completed' WHERE o.orderStatus = 'closed' AND o.accountId  = :userID") })
+    @NamedQuery(name = "orderejb.completeClosedOrders", query = "UPDATE orderejb o SET o.orderStatus = 'completed' " 
+      + "WHERE o.orderStatus = 'closed' AND o.accountId  = :userID") })
 public class OrderDataBean implements Serializable {
 
   private static final long serialVersionUID = 120650490200739057L;
 
   @Id
-  @TableGenerator(name = "orderIdGen", table = "KEYGENEJB", pkColumnName = "KEYNAME", valueColumnName = "KEYVAL", pkColumnValue = "order", allocationSize = 1000)
+  @TableGenerator(name = "orderIdGen", table = "KEYGENEJB", pkColumnName = "KEYNAME", 
+      valueColumnName = "KEYVAL", pkColumnValue = "order", allocationSize = 1000)
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "orderIdGen")
   @Column(name = "ORDERID", nullable = false)
   private Integer orderID; /* orderID */
@@ -63,9 +65,7 @@ public class OrderDataBean implements Serializable {
   private String orderType; /* orderType (buy, sell, etc.) */
 
   @Column(name = "ORDERSTATUS")
-  private String orderStatus; /*
-                               * orderStatus (open, processing, completed, closed, cancelled)
-                               */
+  private String orderStatus; 
 
   @Column(name = "OPENDATE")
   @Temporal(TemporalType.TIMESTAMP)

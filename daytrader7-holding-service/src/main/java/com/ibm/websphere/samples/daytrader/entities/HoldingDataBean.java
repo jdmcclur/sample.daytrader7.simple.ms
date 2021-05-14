@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,8 @@ public class HoldingDataBean implements  Serializable {
   private static final long serialVersionUID = -2338411656251935480L;
 
   @Id
-  @TableGenerator(name = "holdingIdGen", table = "KEYGENEJB", pkColumnName = "KEYNAME", valueColumnName = "KEYVAL", pkColumnValue = "holding", allocationSize = 1000)
+  @TableGenerator(name = "holdingIdGen", table = "KEYGENEJB", pkColumnName = "KEYNAME", 
+      valueColumnName = "KEYVAL", pkColumnValue = "holding", allocationSize = 1000)
   @GeneratedValue(strategy = GenerationType.TABLE, generator = "holdingIdGen")
   @Column(name = "HOLDINGID", nullable = false)
   private Integer holdingID; /* holdingID */

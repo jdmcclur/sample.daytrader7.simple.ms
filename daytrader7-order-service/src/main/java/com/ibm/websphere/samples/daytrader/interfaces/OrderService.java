@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,8 +51,7 @@ public interface OrderService {
   /**
    * Cancel the Order identefied by orderID.
    *
-   * <p>
-   * The boolean twoPhase specifies to the server implementation whether or not
+   * <p>The boolean twoPhase specifies to the server implementation whether or not
    * the method is to participate in a global transaction
    *
    * @param orderID the Order to complete

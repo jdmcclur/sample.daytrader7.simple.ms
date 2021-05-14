@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
  */
 
 package com.ibm.websphere.samples.daytrader.web;
-
-import com.ibm.websphere.samples.daytrader.util.Log;
-import com.ibm.websphere.samples.daytrader.util.TradeConfig;
 
 import java.io.IOException;
 
@@ -44,12 +41,7 @@ public class TradeAppServlet extends HttpServlet {
 
   @Inject 
   TradeServletAction tsAction;
-
-  @Inject 
-  Log Log;
-
-  @Inject TradeConfig TradeConfig;
-  
+ 
   /**
    * Returns a string that contains information about TradeScenarioServlet.
    *
@@ -73,7 +65,7 @@ public class TradeAppServlet extends HttpServlet {
   }
 
   /**
-   * Process incoming HTTP POST requests
+   * Process incoming HTTP POST requests.
    *
    * @param request  Object that encapsulates the request to the servlet
    * @param response Object that encapsulates the response from the servlet

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 @Named(value = "config")
 public class TradeConfig {
-
-  @Inject 
-  Log Log;
 
   /* Trade Database Scaling parameters */
   @Inject @ConfigProperty(name = "MAX_USERS", defaultValue = "15000")

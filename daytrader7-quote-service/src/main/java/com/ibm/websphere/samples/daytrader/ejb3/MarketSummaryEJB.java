@@ -1,4 +1,4 @@
-/* (C) Copyright IBM Corporation 2015.
+/* (C) Copyright IBM Corporation 2015,2021
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
 import com.ibm.websphere.samples.daytrader.interfaces.QuoteService;
 import com.ibm.websphere.samples.daytrader.util.Log;
 
-
 import javax.annotation.PostConstruct;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -30,43 +29,42 @@ import javax.inject.Inject;
 @Singleton
 public class MarketSummaryEJB {
 
- @Inject
- Log Log;
+  @Inject
+  Log logService;
 
- @Inject QuoteService quoteService;
- 
- private MarketSummaryDataBean marketSummaryDataBean; 
+  @Inject
+  QuoteService quoteService;
 
- @PostConstruct
- private void setup() {
-   updateMarketSummary();
- }
+  private MarketSummaryDataBean marketSummaryDataBean;
 
- /* Update Market Summary every 20 seconds */
- @Schedule(second = "*/20", minute = "*", hour = "*", persistent = false)
- private void updateMarketSummary() {
+  @PostConstruct
+  private void setup() {
+    updateMarketSummary();
+  }
 
-   if (Log.doTrace()) {
-     Log.trace("MarketSummarySingleton:updateMarketSummary -- updating market summary");
-   }
+  /* Update Market Summary every 20 seconds */
+  @Schedule(second = "*/20", minute = "*", hour = "*", persistent = false)
+  private void updateMarketSummary() {
 
-   try {    
-     setMarketSummaryDataBean(quoteService.getMarketSummary());
-   } catch (Exception e) {
-     e.printStackTrace();
-   }
- }
+    if (logService.doTrace()) {
+      logService.trace("MarketSummarySingleton:updateMarketSummary -- updating market summary");
+    }
 
- @Lock(LockType.READ)
- public MarketSummaryDataBean getMarketSummaryDataBean() {
-   return marketSummaryDataBean;
- }
+    try {
+      setMarketSummaryDataBean(quoteService.getMarketSummary());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 
- @Lock(LockType.WRITE)
- public void setMarketSummaryDataBean(MarketSummaryDataBean marketSummaryDataBean) {
-   this.marketSummaryDataBean = marketSummaryDataBean;
- }
+  @Lock(LockType.READ)
+  public MarketSummaryDataBean getMarketSummaryDataBean() {
+    return marketSummaryDataBean;
+  }
 
-}class r {
-  
+  @Lock(LockType.WRITE)
+  public void setMarketSummaryDataBean(MarketSummaryDataBean marketSummaryDataBean) {
+    this.marketSummaryDataBean = marketSummaryDataBean;
+  }
+
 }

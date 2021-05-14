@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015, 2021
+ * (C) Copyright IBM Corporation 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.ibm.websphere.samples.daytrader.ejb3;
+
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.AccountService;
+import com.ibm.websphere.samples.daytrader.util.Log;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import javax.annotation.Resource;
 import javax.ejb.EJBException;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -32,144 +36,136 @@ import javax.persistence.PersistenceContext;
 
 import javax.transaction.RollbackException;
 
-
-import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
-import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
-import com.ibm.websphere.samples.daytrader.interfaces.AccountService;
-import com.ibm.websphere.samples.daytrader.util.Log;
-
-
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class AccountServiceEJBImpl implements AccountService {
-	
-    @PersistenceContext
-    private EntityManager entityManager;
 
-    @Resource
-    private SessionContext context;
+  @PersistenceContext
+  private EntityManager entityManager;
 
-    @Inject
-    private Log Log;
-        
-    @Override
-    public AccountDataBean getAccountData(String userID) {
-        if (Log.doTrace()) {
-            Log.trace("TradeSLSBBean:getAccountData", userID);
-        }
+  @Inject
+  private Log logService;
 
-        AccountProfileDataBean profile = entityManager.find(AccountProfileDataBean.class, userID);
-        AccountDataBean account = profile.getAccount();
-
-        // Added to populate transient field for account
-        account.setProfileID(profile.getUserID());
-        
-        return account;
+  @Override
+  public AccountDataBean getAccountData(String userID) {
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:getAccountData", userID);
     }
 
-    @Override
-    public AccountProfileDataBean getAccountProfileData(String userID) {
-        if (Log.doTrace()) {
-            Log.trace("TradeSLSBBean:getProfileData", userID);
-        }
+    AccountProfileDataBean profile = entityManager.find(AccountProfileDataBean.class, userID);
+    AccountDataBean account = profile.getAccount();
 
-        return entityManager.find(AccountProfileDataBean.class, userID);
+    // Added to populate transient field for account
+    account.setProfileID(profile.getUserID());
+
+    return account;
+  }
+
+  @Override
+  public AccountProfileDataBean getAccountProfileData(String userID) {
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:getProfileData", userID);
     }
 
-    @Override
-    public AccountProfileDataBean updateAccountProfile(AccountProfileDataBean profileData) {
-        if (Log.doTrace()) {
-            Log.trace("TradeSLSBBean:updateAccountProfileData", profileData);
-        }
-             
-        AccountProfileDataBean temp = entityManager.find(AccountProfileDataBean.class, profileData.getUserID());
-        temp.setAddress(profileData.getAddress());
-        temp.setPassword(profileData.getPassword());
-        temp.setFullName(profileData.getFullName());
-        temp.setCreditCard(profileData.getCreditCard());
-        temp.setEmail(profileData.getEmail());
+    return entityManager.find(AccountProfileDataBean.class, userID);
+  }
 
-        entityManager.merge(temp);
-
-        return temp;
+  @Override
+  public AccountProfileDataBean updateAccountProfile(AccountProfileDataBean profileData) {
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:updateAccountProfileData", profileData);
     }
 
-    @Override
-    public AccountDataBean login(String userID, String password) throws RollbackException {
-        AccountProfileDataBean profile = entityManager.find(AccountProfileDataBean.class, userID);
+    AccountProfileDataBean temp = entityManager.find(AccountProfileDataBean.class, profileData.getUserID());
+    temp.setAddress(profileData.getAddress());
+    temp.setPassword(profileData.getPassword());
+    temp.setFullName(profileData.getFullName());
+    temp.setCreditCard(profileData.getCreditCard());
+    temp.setEmail(profileData.getEmail());
 
-        if (profile == null) {
-            throw new EJBException("No such user: " + userID);
-        }
-        
-        AccountDataBean account = profile.getAccount();
+    entityManager.merge(temp);
 
-        if (Log.doTrace()) {
-            Log.trace("TradeSLSBBean:login", userID, password);
-        }
-        account.login(password);
-        if (Log.doTrace()) {
-            Log.trace("TradeSLSBBean:login(" + userID + "," + password + ") success" + account);
-        }
-        
-        return account;
+    return temp;
+  }
+
+  @Override
+  public AccountDataBean login(String userID, String password) throws RollbackException {
+    AccountProfileDataBean profile = entityManager.find(AccountProfileDataBean.class, userID);
+
+    if (profile == null) {
+      throw new EJBException("No such user: " + userID);
     }
 
-    @Override
-    public void logout(String userID) {
-        if (Log.doTrace()) {
-            Log.trace("TradeSLSBBean:logout", userID);
-        }
+    AccountDataBean account = profile.getAccount();
 
-        AccountProfileDataBean profile = entityManager.find(AccountProfileDataBean.class, userID);
-        AccountDataBean account = profile.getAccount();
-
-        account.logout();
-
-        if (Log.doTrace()) {
-            Log.trace("TradeSLSBBean:logout(" + userID + ") success");
-        }
-        
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:logServicein", userID, password);
+    }
+    account.login(password);
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:logServicein(" + userID + "," + password + ") success" + account);
     }
 
-    @Override
-    public AccountDataBean register(String userID, String password, String fullname, String address, String email, String creditcard, BigDecimal openBalance) {
-        AccountDataBean account = null;
-        AccountProfileDataBean profile = null;
+    return account;
+  }
 
-        if (Log.doTrace()) {
-            Log.trace("TradeSLSBBean:register", userID, password, fullname, address, email, creditcard, openBalance);
-        }
-
-        // Check to see if a profile with the desired userID already exists
-        profile = entityManager.find(AccountProfileDataBean.class, userID);
-
-        if (profile != null) {
-            Log.error("Failed to register new Account - AccountProfile with userID(" + userID + ") already exists");
-            return null;
-        } else {
-            profile = new AccountProfileDataBean(userID, password, fullname, address, email, creditcard);
-            account = new AccountDataBean(0, 0, null, new Timestamp(System.currentTimeMillis()), openBalance, openBalance, userID);
-
-            profile.setAccount(account);
-            account.setProfile(profile);
-
-            entityManager.persist(profile);
-            entityManager.persist(account);
-        }
-
-        return account;
+  @Override
+  public void logout(String userID) {
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:logServiceout", userID);
     }
 
-    @Override
-    public BigDecimal updateAccountBalance(String userId, BigDecimal balanceUpdate) {
-      AccountProfileDataBean profile = entityManager.find(AccountProfileDataBean.class, userId);
-      AccountDataBean temp = profile.getAccount();
-      BigDecimal newTotal = temp.getBalance().add(balanceUpdate);
-      temp.setBalance(newTotal);
-      entityManager.merge(temp);
+    AccountProfileDataBean profile = entityManager.find(AccountProfileDataBean.class, userID);
+    AccountDataBean account = profile.getAccount();
 
-      return newTotal;
+    account.logout();
+
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:logServiceout(" + userID + ") success");
     }
+
+  }
+
+  @Override
+  public AccountDataBean register(String userID, String password, String fullname, String address, String email,
+      String creditcard, BigDecimal openBalance) {
+    AccountDataBean account = null;
+    AccountProfileDataBean profile = null;
+
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:register", userID, password, fullname, address, email, creditcard, openBalance);
+    }
+
+    // Check to see if a profile with the desired userID already exists
+    profile = entityManager.find(AccountProfileDataBean.class, userID);
+
+    if (profile != null) {
+      logService.error("Failed to register new Account - AccountProfile with userID(" + userID + ") already exists");
+      return null;
+    } else {
+      profile = new AccountProfileDataBean(userID, password, fullname, address, email, creditcard);
+      account = new AccountDataBean(0, 0, null, new Timestamp(System.currentTimeMillis()), openBalance, openBalance,
+          userID);
+
+      profile.setAccount(account);
+      account.setProfile(profile);
+
+      entityManager.persist(profile);
+      entityManager.persist(account);
+    }
+
+    return account;
+  }
+
+  @Override
+  public BigDecimal updateAccountBalance(String userId, BigDecimal balanceUpdate) {
+    AccountProfileDataBean profile = entityManager.find(AccountProfileDataBean.class, userId);
+    AccountDataBean temp = profile.getAccount();
+    BigDecimal newTotal = temp.getBalance().add(balanceUpdate);
+    temp.setBalance(newTotal);
+    entityManager.merge(temp);
+
+    return newTotal;
+  }
 }

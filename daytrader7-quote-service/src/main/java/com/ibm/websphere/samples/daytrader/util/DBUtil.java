@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class DBUtil {
   private DataSource datasource;
   
   @Inject
-  Log Log;
+  Log logService;
   
   /**
    * Re-create the DayTrader db tables and populate them OR just populate a
@@ -61,10 +61,11 @@ public class DBUtil {
     try {
       dbProductName = checkDBProductName();
     } catch (Exception e) {
-      Log.error(e, "TradeBuildDB: Unable to check DB Product name");
+      logService.error(e, "TradeBuildDB: Unable to check DB Product name");
       throw(e);
     }
-    if (dbProductName.startsWith("DB2/")) {// if db is DB2
+    if (dbProductName.startsWith("DB2/")) {
+      // if db is DB2
       ddlFile = "/dbscripts/db2/Table.ddl";
     } else if (dbProductName.startsWith("DB2 UDB for AS/400")) { // if db is DB2 on IBM i
       ddlFile = "/dbscripts/db2i/Table.ddl";
@@ -72,7 +73,8 @@ public class DBUtil {
       ddlFile = "/dbscripts/derby/Table.ddl";
     } else if (dbProductName.startsWith("Oracle")) { // if the Db is Oracle
       ddlFile = "/dbscripts/oracle/Table.ddl";
-    } else {// Unsupported "Other" Database, try derby ddl
+    } else {
+      // Unsupported "Other" Database, try derby ddl
       ddlFile = "/dbscripts/derby/Table.ddl";
 
       System.out.println("TradeBuildDB: **** This Database is unsupported/untested use at your own risk ****");
@@ -88,7 +90,7 @@ public class DBUtil {
       try {
         sqlBuffer = parseDDLToBuffer(ddlFile);
       } catch (Exception e) {
-        Log.error(e, "TradeBuildDB: Unable to parse DDL file");
+        logService.error(e, "TradeBuildDB: Unable to parse DDL file");
         System.out.println("<BR>TradeBuildDB: **** Unable to parse DDL file for the specified database ****</BR></BODY>");
         return;
       }
@@ -104,7 +106,7 @@ public class DBUtil {
       try {
         success = recreateDBTables(sqlBuffer);
       } catch (Exception e) {
-        Log.error(e,
+        logService.error(e,
             "DButil: Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing");
         System.out.println(
             "DBUtil: Unable to drop and recreate DayTrader Db Tables, please check for database consistency before continuing");
@@ -117,7 +119,8 @@ public class DBUtil {
         return;
       }
       System.out.println(
-          "DBUtil: **** DayTrader quote table successfully created! ****< Please use the \"Repopulate Daytrader Database\" link to populate your database.");
+          "DBUtil: **** DayTrader quote table successfully created! ****"
+          + "< Please use the \"Repopulate Daytrader Database\" link to populate your database.");
       return;
     } // end of createDBTables
   }
@@ -128,8 +131,8 @@ public class DBUtil {
     ArrayList<String> sqlBuffer = new ArrayList<String>(30);
 
     try {
-      if (Log.doTrace()) {
-        Log.traceEnter("TradeBuildDB:parseDDLToBuffer - " + ddlFile);
+      if (logService.doTrace()) {
+        logService.traceEnter("TradeBuildDB:parseDDLToBuffer - " + ddlFile);
       }
 
       br = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(ddlFile)));
@@ -147,14 +150,14 @@ public class DBUtil {
         }
       }
     } catch (IOException ex) {
-      Log.error("DBUtil:parseDDLToBuffer Exeception during open/read of File: " + ddlFile, ex);
+      logService.error("DBUtil:parseDDLToBuffer Exeception during open/read of File: " + ddlFile, ex);
       throw ex;
     } finally {
       if (br != null) {
         try {
           br.close();
         } catch (IOException ex) {
-          Log.error("DBUtil:parseDDLToBuffer Failed to close BufferedReader", ex);
+          logService.error("DBUtil:parseDDLToBuffer Failed to close BufferedReader", ex);
         }
       }
     }
@@ -166,15 +169,15 @@ public class DBUtil {
     String dbProductName = null;
 
     try {
-      if (Log.doTrace()) {
-        Log.traceEnter("DBUtil:checkDBProductName");
+      if (logService.doTrace()) {
+        logService.traceEnter("DBUtil:checkDBProductName");
       }
 
       conn = datasource.getConnection();
       DatabaseMetaData dbmd = conn.getMetaData();
       dbProductName = dbmd.getDatabaseProductName();
     } catch (SQLException e) {
-      Log.error(e, "DBUtil:checkDBProductName() -- Error checking the Daytrader Database Product Name");
+      logService.error(e, "DBUtil:checkDBProductName() -- Error checking the Daytrader Database Product Name");
     } finally {
       conn.close();
     }
@@ -188,8 +191,8 @@ public class DBUtil {
     Connection conn = null;
     boolean success = false;
     try {
-      if (Log.doTrace()) {
-        Log.traceEnter("DBUtil:recreateDBTables");
+      if (logService.doTrace()) {
+        logService.traceEnter("DBUtil:recreateDBTables");
       }
 
       conn = datasource.getConnection();
@@ -203,7 +206,7 @@ public class DBUtil {
         } catch (SQLException ex) {
           // Ignore DROP statements as tables won't always exist.
           if (((String) sqlBuffer[i]).indexOf("DROP TABLE") < 0) {
-            Log.error(
+            logService.error(
                 "TradeDirect:recreateDBTables SQL Exception thrown on executing the foll sql command: " + sqlBuffer[i],
                 ex);
             System.out.println("SQL Exception thrown on executing the foll sql command: <I>" + sqlBuffer[i]
@@ -215,7 +218,7 @@ public class DBUtil {
       conn.commit();
       success = true;
     } catch (Exception e) {
-      Log.error(e, "DBUtil:recreateDBTables() -- Error dropping and recreating the database tables");
+      logService.error(e, "DBUtil:recreateDBTables() -- Error dropping and recreating the database tables");
     } finally {
       conn.close();
     }
@@ -230,8 +233,8 @@ public class DBUtil {
     // RunStatsDataBean runStatsData = new RunStatsDataBean();
     Connection conn = null;
     try {
-      if (Log.doTrace()) {
-        Log.traceEnter("TradeDirect:resetTrade deleteAll rows=" + deleteAll);
+      if (logService.doTrace()) {
+        logService.traceEnter("TradeDirect:resetTrade deleteAll rows=" + deleteAll);
       }
       conn = datasource.getConnection();
       PreparedStatement stmt = null;
@@ -252,7 +255,7 @@ public class DBUtil {
           // stmt.close();
           conn.commit();
         } catch (Exception e) {
-          Log.error(e,
+          logService.error(e,
               "DBUtil:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database");
         }
         System.out.println("quotes deleted\n\n");
@@ -261,7 +264,7 @@ public class DBUtil {
       
       System.out.println("quotes reset\n\n");
     } catch (Exception e) {
-      Log.error(e, "Failed to reset Trade");
+      logService.error(e, "Failed to reset Trade");
       conn.rollback();
       throw e;
     } finally {

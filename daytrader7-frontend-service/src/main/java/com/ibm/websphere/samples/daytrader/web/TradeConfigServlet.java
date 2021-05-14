@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package com.ibm.websphere.samples.daytrader.web;
 
-import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
 import com.ibm.websphere.samples.daytrader.util.DBLoader;
 import com.ibm.websphere.samples.daytrader.util.Log;
 import com.ibm.websphere.samples.daytrader.util.TradeConfig;
@@ -43,14 +42,14 @@ public class TradeConfigServlet extends HttpServlet {
 
   private static final long serialVersionUID = -1910381529792500095L;
 
-  private final String CONFIG_PAGE = "/config.jsp";
-  private final String STATS_PAGE = "/runStats.jsp";
+  private static final String CONFIG_PAGE = "/config.jsp";
+  private static final String STATS_PAGE = "/runStats.jsp";
 
   @Inject
-  Log Log;
+  Log logService;
 
   @Inject
-  TradeConfig TradeConfig;
+  TradeConfig configService;
 
   @Inject DBLoader dbLoader;
 
@@ -76,20 +75,19 @@ public class TradeConfigServlet extends HttpServlet {
   }
 
   void doResetTrade(HttpServletRequest req, HttpServletResponse resp, String results) throws Exception {
-    RunStatsDataBean runStatsData = new RunStatsDataBean();
     TradeConfig currentConfig = new TradeConfig();
     try {
       //@TODO
       //runStatsData = TradeDbUtils.resetTrade(false);
 
-      req.setAttribute("runStatsData", runStatsData);
+      //req.setAttribute("runStatsData", runStatsData);
       req.setAttribute("tradeConfig", currentConfig);
       results += "Trade Reset completed successfully";
       req.setAttribute("status", results);
 
     } catch (Exception e) {
       results += "Trade Reset Error  - see log for details";
-      Log.error(e, results);
+      logService.error(e, results);
       throw e;
     }
     getServletConfig().getServletContext().getRequestDispatcher(STATS_PAGE)
@@ -117,14 +115,14 @@ public class TradeConfigServlet extends HttpServlet {
         return;
       } else if (action.equals("buildDB")) {
         dbLoader.populateDB(resp.getWriter());
-        result = "DayTrader Database Built - " + TradeConfig.getMaxUsers() + "users created";
+        result = "DayTrader Database Built - " + configService.getMaxUsers() + "users created";
       } else if (action.equals("buildDBTables")) {
         dbLoader.createDB();
         result = "DayTrader Databases Created - ";
       }
       doConfigDisplay(req, resp, result + "Current DayTrader Configuration:");
     } catch (Exception e) {
-      Log.error(e, "TradeConfigServlet.service(...)", "Exception trying to perform action=" + action);
+      logService.error(e, "TradeConfigServlet.service(...)", "Exception trying to perform action=" + action);
 
       resp.sendError(500, "TradeConfigServlet.service(...)" + "Exception trying to perform action=" + action
           + "\nException details: " + e.toString());

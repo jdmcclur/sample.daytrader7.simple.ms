@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.ibm.websphere.samples.daytrader.web;
+
+import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
+import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.TradeService;
+import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.TradeConfig;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -31,15 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ibm.websphere.samples.daytrader.interfaces.TradeService;
-import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
-import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
-import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
-import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
-import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
-import com.ibm.websphere.samples.daytrader.util.Log;
-import com.ibm.websphere.samples.daytrader.util.TradeConfig;
-
 /**
  * TradeServletradeService provides servlet specific client side access to each
  * of the Trade brokerage user operations. These include login, logout, buy,
@@ -55,23 +56,23 @@ public class TradeServletAction implements Serializable {
   private static final long serialVersionUID = 7732313125198761455L;
 
   /* Trade Scenario Workload parameters */
-  private final String WELCOME_PAGE = "/welcome.jsp";
-  private final String REGISTER_PAGE = "/register.jsp";
-  private final String PORTFOLIO_PAGE = "/portfolio.jsp";
-  private final String QUOTE_PAGE = "/quote.jsp";
-  private final String HOME_PAGE = "/tradehome.jsp";
-  private final String ACCOUNT_PAGE = "/account.jsp";
-  private final String ORDER_PAGE = "/order.jsp";
-  private final String MARKET_SUMMARY_PAGE = "/marketSummary.jsp";
+  private static final String WELCOME_PAGE = "/welcome.jsp";
+  private static final String REGISTER_PAGE = "/register.jsp";
+  private static final String PORTFOLIO_PAGE = "/portfolio.jsp";
+  private static final String QUOTE_PAGE = "/quote.jsp";
+  private static final String HOME_PAGE = "/tradehome.jsp";
+  private static final String ACCOUNT_PAGE = "/account.jsp";
+  private static final String ORDER_PAGE = "/order.jsp";
+  private static final String MARKET_SUMMARY_PAGE = "/marketSummary.jsp";
 
   @Inject
   private TradeService tradeService;
 
   @Inject
-  Log Log;
+  Log logService;
 
   @Inject
-  TradeConfig TradeConfig;
+  TradeConfig configService;
 
   /**
    * Display User Profile information such as address, email, etc. for the given
@@ -109,9 +110,9 @@ public class TradeServletAction implements Serializable {
       // forward them to another page rather than throw a 500
       req.setAttribute("results", results + "could not find account for userID = " + userID);
       requestDispatch(ctx, req, resp, userID, HOME_PAGE);
-      // log the exception with an error level of 3 which means, handled
+      // logService the exception with an error level of 3 which means, handled
       // exception but would invalidate a automation run
-      Log.error("TradeServletradeService.doAccount(...)", "illegal argument, information should be in exception string",
+      logService.error("TradeServletradeService.doAccount(...)", "illegal argument, information should be in exception string",
           e);
     } catch (Exception e) {
       // log the exception with error page
@@ -169,7 +170,7 @@ public class TradeServletAction implements Serializable {
       // forward them to another page rather than throw a 500
       req.setAttribute("results",
           results + "invalid argument, check userID is correct, and the database is populated" + userID);
-      Log.error(e, "TradeServletradeService.doAccount(...)",
+      logService.error(e, "TradeServletradeService.doAccount(...)",
           "illegal argument, information should be in exception string",
           "treating this as a user error and forwarding on to a new page");
     } catch (Exception e) {
@@ -181,7 +182,7 @@ public class TradeServletAction implements Serializable {
 
   /**
    * Buy a new holding of shares for the given trader Dispatch to the Trade
-   * Portfolio JSP for display
+   * Portfolio JSP for display.
    *
    * @param userID The User buying shares
    * @param symbol The stock to purchase
@@ -210,9 +211,9 @@ public class TradeServletAction implements Serializable {
       // forward them to another page rather than throw a 500
       req.setAttribute("results", results + "illegal argument:");
       requestDispatch(ctx, req, resp, userID, HOME_PAGE);
-      // log the exception with an error level of 3 which means, handled
+      // Log the exception with an error level of 3 which means, handled
       // exception but would invalidate a automation run
-      Log.error(e, "TradeServletradeService.doBuy(...)", "illegal argument. userID = " + userID, "symbol = " + symbol);
+      logService.error(e, "TradeServletradeService.doBuy(...)", "illegal argument. userID = " + userID, "symbol = " + symbol);
     } catch (Exception e) {
       // log the exception with error page
       throw new ServletException(
@@ -223,7 +224,7 @@ public class TradeServletAction implements Serializable {
 
   /**
    * Create the Trade Home page with personalized information such as the traders
-   * account balance Dispatch to the Trade Home JSP for display
+   * account balance Dispatch to the Trade Home JSP for display.
    *
    * @param ctx     the servlet context
    * @param req     the HttpRequest object
@@ -262,19 +263,9 @@ public class TradeServletAction implements Serializable {
       requestDispatch(ctx, req, resp, userID, HOME_PAGE);
       // log the exception with an error level of 3 which means, handled
       // exception but would invalidate a automation run
-      Log.error("TradeServletradeService.doHome(...)" + "illegal argument, information should be in exception string"
+      logService.error("TradeServletradeService.doHome(...)" + "illegal argument, information should be in exception string"
           + "treating this as a user error and forwarding on to a new page", e);
-    } /*
-       * catch (javax.ejb.FinderException e) { // this is a user error so I will //
-       * forward them to another page rather than throw a 500
-       * req.setAttribute("results", results + "\nCould not find account for + " +
-       * userID); // requestDispatch(ctx, req, resp, //
-       * TradeConfig.getPage(TradeConfig.HOME_PAGE)); // log the exception with an
-       * error level of 3 which means, handled // exception but would invalidate a
-       * automation run Log.error("TradeServletradeService.doHome(...)" +
-       * "Error finding account for user " + userID +
-       * "treating this as a user error and forwarding on to a new page", e); }
-       */ catch (Exception e) {
+    } catch (Exception e) {
       // log the exception with error page
       throw new ServletException("TradeServletradeService.doHome(...)" + " exception user =" + userID, e);
     }
@@ -317,7 +308,7 @@ public class TradeServletAction implements Serializable {
         req.setAttribute("results", results + "\nCould not find account for + " + userID);
         // log the exception with an error level of 3 which means,
         // handled exception but would invalidate a automation run
-        Log.log("TradeServletradeService.doLogin(...)", "Error finding account for user " + userID + "",
+        logService.log("TradeServletradeService.doLogin(...)", "Error finding account for user " + userID + "",
             "user entered a bad username or the database is not populated");
       }
     } catch (java.lang.IllegalArgumentException e) { // this is a user
@@ -326,7 +317,7 @@ public class TradeServletAction implements Serializable {
       req.setAttribute("results", results + "illegal argument:" + e.getMessage());
       // log the exception with an error level of 3 which means, handled
       // exception but would invalidate a automation run
-      Log.error(e, "TradeServletradeService.doLogin(...)",
+      logService.error(e, "TradeServletradeService.doLogin(...)",
           "illegal argument, information should be in exception string",
           "treating this as a user error and forwarding on to a new page");
 
@@ -341,7 +332,7 @@ public class TradeServletAction implements Serializable {
   }
 
   /**
-   * Logout a Trade User Dispatch to the Trade Welcome JSP for display
+   * Logout a Trade User Dispatch to the Trade Welcome JSP for display.
    *
    * @param userID  The User to logout
    * @param ctx     the servlet context
@@ -369,12 +360,12 @@ public class TradeServletAction implements Serializable {
 
       // log the exception with an error level of 3 which means, handled
       // exception but would invalidate a automation run
-      Log.error(e, "TradeServletradeService.doLogout(...)",
+      logService.error(e, "TradeServletradeService.doLogout(...)",
           "illegal argument, information should be in exception string",
           "treating this as a user error and forwarding on to a new page");
     } catch (Exception e) {
       // log the exception and foward to a error page
-      Log.error(e, "TradeServletradeService.doLogout(...):", "Error logging out" + userID,
+      logService.error(e, "TradeServletradeService.doLogout(...):", "Error logging out" + userID,
           "fowarding to an error page");
       // set the status_code to 500
       throw new ServletException("TradeServletradeService.doLogout(...)" + "exception logging out user " + userID, e);
@@ -401,7 +392,7 @@ public class TradeServletAction implements Serializable {
 
   /**
    * Retrieve the current portfolio of stock holdings for the given trader
-   * Dispatch to the Trade Portfolio JSP for display
+   * Dispatch to the Trade Portfolio JSP for display.
    *
    * @param userID  The User requesting to view their portfolio
    * @param ctx     the servlet context
@@ -446,16 +437,12 @@ public class TradeServletAction implements Serializable {
       req.setAttribute("holdingDataBeans", holdingDataBeans);
       req.setAttribute("quoteDataBeans", quoteDataBeans);
       requestDispatch(ctx, req, resp, userID, PORTFOLIO_PAGE);
-    } catch (
-
-    java.lang.IllegalArgumentException e) { // this is a user
-                                            // error so I will
-                                            // forward them to another page rather than throw a 500
+    } catch (IllegalArgumentException e) { 
       req.setAttribute("results", results + "illegal argument:" + e.getMessage());
       requestDispatch(ctx, req, resp, userID, PORTFOLIO_PAGE);
       // log the exception with an error level of 3 which means, handled
       // exception but would invalidate a automation run
-      Log.error(e, "TradeServletradeService.doPortfolio(...)",
+      logService.error(e, "TradeServletradeService.doPortfolio(...)",
           "illegal argument, information should be in exception string", "user error");
     } catch (Exception e) {
       // log the exception with error page
@@ -465,7 +452,7 @@ public class TradeServletAction implements Serializable {
 
   /**
    * Retrieve the current Quote for the given stock symbol Dispatch to the Trade
-   * Quote JSP for display
+   * Quote JSP for display.
    *
    * @param userID The stock symbol used to get the current quote
    * @param ctx    the servlet context
@@ -497,6 +484,9 @@ public class TradeServletAction implements Serializable {
    * Register a new trader given the provided user Profile information such as
    * address, email, etc. Dispatch to the Trade Home JSP for display
    *
+   * @param ctx  the servlet context
+   * @param req  the HttpRequest object
+   * @param resp the HttpResponse object
    * @param userID   The User to create
    * @param passwd   The User password
    * @param fullname The new User fullname info
@@ -505,9 +495,7 @@ public class TradeServletAction implements Serializable {
    * @param address  The new User address info
    * @param email    The new User email info
    * @return The userID of the new trader
-   * @param ctx  the servlet context
-   * @param req  the HttpRequest object
-   * @param resp the HttpResponse object
+
    * @exception javax.servlet.ServletException If a servlet specific exception is
    *                                           encountered
    * @exception javax.io.IOException           If an exception occurs while
@@ -579,7 +567,7 @@ public class TradeServletAction implements Serializable {
       // just log the exception and then later on I will redisplay the
       // portfolio page
       // because this is just a user exception
-      Log.error(e, "TradeServletradeService.doSell(...)", "illegal argument, information should be in exception string",
+      logService.error(e, "TradeServletradeService.doSell(...)", "illegal argument, information should be in exception string",
           "user error");
     } catch (Exception e) {
       // log the exception with error page

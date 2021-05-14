@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package com.ibm.websphere.samples.daytrader.interfaces;
 
-import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
 import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
 
 import java.math.BigDecimal;
 import java.util.List;

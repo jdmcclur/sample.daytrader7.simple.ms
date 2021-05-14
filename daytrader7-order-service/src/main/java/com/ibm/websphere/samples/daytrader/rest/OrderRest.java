@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015, 2021
+ * (C) Copyright IBM Corporation 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 
 package com.ibm.websphere.samples.daytrader.rest;
 
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.OrderService;
+
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -23,17 +26,13 @@ import javax.inject.Inject;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
-import com.ibm.websphere.samples.daytrader.interfaces.OrderService;
-
 
 @Path("/")
 @ApplicationScoped
@@ -47,9 +46,9 @@ public class OrderRest {
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
   public OrderDataBean buy(
-    @FormParam("userId") String userId, 
-    @FormParam("symbol") String symbol, 
-    @FormParam("quantity") double quantity) throws Exception {
+      @FormParam("userId") String userId, 
+      @FormParam("symbol") String symbol, 
+      @FormParam("quantity") double quantity) throws Exception {
     return orderService.buy(userId, symbol, quantity);
   }
   
@@ -58,8 +57,8 @@ public class OrderRest {
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
   public OrderDataBean sell(
-    @FormParam("userId")String userId, 
-    @FormParam("holdingId") Integer holdingId) throws Exception {
+      @FormParam("userId")String userId, 
+      @FormParam("holdingId") Integer holdingId) throws Exception {
     return orderService.sell(userId, holdingId);
   }
   

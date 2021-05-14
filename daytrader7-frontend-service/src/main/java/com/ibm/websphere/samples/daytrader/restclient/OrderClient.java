@@ -1,4 +1,22 @@
+/**
+ * (C) Copyright IBM Corporation 2021.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.ibm.websphere.samples.daytrader.restclient;
+
+import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
 
 import java.util.List;
 
@@ -12,8 +30,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
-
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @RegisterRestClient(configKey = "orderClient")
@@ -24,10 +40,8 @@ public interface OrderClient {
   @Path("/buy")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
-  OrderDataBean buy(
-    @FormParam("userId") String userId, 
-    @FormParam("symbol") String symbol, 
-    @FormParam("quantity") double quantity);
+  OrderDataBean buy(@FormParam("userId") String userId, @FormParam("symbol") String symbol,
+      @FormParam("quantity") double quantity);
 
   @POST
   @Path("/sell")
@@ -50,13 +64,13 @@ public interface OrderClient {
   @Produces(MediaType.APPLICATION_JSON)
   public List<OrderDataBean> getClosedOrders(@PathParam("userId") String userId);
 
-    // DB ------
+  // DB ------
 
-    @GET
-    @Path("/db/createDB")
-    public Response createDB();
-  
-    @GET
-    @Path("/db/resetDB/{deleteAll}")
-    public Response resetDB(@PathParam("deleteAll") Boolean deleteAll);
+  @GET
+  @Path("/db/createDB")
+  public Response createDB();
+
+  @GET
+  @Path("/db/resetDB/{deleteAll}")
+  public Response resetDB(@PathParam("deleteAll") Boolean deleteAll);
 }

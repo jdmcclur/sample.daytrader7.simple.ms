@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 
 public interface AccountService {
 
-    /**
+  /**
    * Return an AccountDataBean object for userID describing the account.
    *
    * @param userID the account userID to lookup

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015, 2021
+ * (C) Copyright IBM Corporation 2021
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package com.ibm.websphere.samples.daytrader.rest;
 
+import com.ibm.websphere.samples.daytrader.util.DBUtil;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -23,11 +25,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import com.ibm.websphere.samples.daytrader.util.DBUtil;
-
-
-@Path("/db")
 @ApplicationScoped
+@Path("/db")
 public class DBRest {
 
   @Inject

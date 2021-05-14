@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ public class OrdersAlertFilter implements Filter {
   TradeService tradeService;
 
   @Inject 
-  Log Log;
+  Log logService;
 
-  @Inject TradeConfig TradeConfig;
+  @Inject TradeConfig configService;
 
   /**
    * Constructor for CompletedOrdersAlertFilter.
@@ -71,7 +71,7 @@ public class OrdersAlertFilter implements Filter {
       return;
     }
 
-    if (TradeConfig.getDisplayOrderAlerts() == true) {
+    if (configService.getDisplayOrderAlerts() == true) {
 
       try {
         String action = req.getParameter("action");
@@ -91,14 +91,14 @@ public class OrdersAlertFilter implements Filter {
               if ((closedOrders != null) && (closedOrders.size() > 0)) {
                 req.setAttribute("closedOrders", closedOrders);
               }
-              if (Log.doTrace()) {
-                Log.printCollection("OrderAlertFilter: userID=" + userID + " closedOrders=", closedOrders);
+              if (logService.doTrace()) {
+                logService.printCollection("OrderAlertFilter: userID=" + userID + " closedOrders=", closedOrders);
               }
             }
           }
         }
       } catch (Exception e) {
-        Log.error(e, "OrdersAlertFilter - Error checking for closedOrders");
+        logService.error(e, "OrdersAlertFilter - Error checking for closedOrders");
       }
     }
 

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.ibm.websphere.samples.daytrader.interfaces;
 
 import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
-import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
 import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
 import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
 import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
@@ -48,7 +47,7 @@ public interface TradeService {
    * Compute and return a snapshot of the current market conditions This includes
    * the TSIA - an index of the price of the top 100 Trade stock quotes The
    * openTSIA ( the index at the open) The volume of shares traded, Top Stocks
-   * gain and loss
+   * gain and loss.
    *
    * @return A snapshot of the current market summary
    */
@@ -197,15 +196,6 @@ public interface TradeService {
    */
   AccountDataBean register(String userID, String password, String fullname, String address, String email,
       String creditcard, BigDecimal openBalance) throws Exception;
-
-  /**
-   * Reset the TradeData by - removing all newly registered users by scenario
-   * servlet (i.e. users with userID's beginning with "ru:") * - removing all
-   * buy/sell order pairs - setting logoutCount = loginCount
-   *
-   * @return statistics for this benchmark run
-   */
-  RunStatsDataBean resetTrade(boolean deleteAll) throws Exception;
 
   List<QuoteDataBean> getQuotes(String symbols);
 }

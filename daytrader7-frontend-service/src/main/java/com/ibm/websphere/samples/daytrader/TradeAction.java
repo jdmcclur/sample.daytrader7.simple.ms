@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015,2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.ibm.websphere.samples.daytrader;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
-import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
 import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
 import com.ibm.websphere.samples.daytrader.entities.AccountProfileDataBean;
 import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
@@ -39,6 +30,17 @@ import com.ibm.websphere.samples.daytrader.restclient.QuoteClient;
 import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
 import com.ibm.websphere.samples.daytrader.util.Log;
 import com.ibm.websphere.samples.daytrader.util.TradeConfig;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+
 
 /**
  * The TradeAction class provides the generic client side access to each of the
@@ -54,13 +56,13 @@ public class TradeAction implements TradeService {
   private final Integer marketSummaryLock = new Integer(0);
   private long nextMarketSummary = System.currentTimeMillis();
   private MarketSummaryDataBean cachedMSDB = new MarketSummaryDataBean();
-  private int MARKET_SUMMARY_INTERVAL = 20;
+  private static final int MARKET_SUMMARY_INTERVAL = 20;
 
   @Inject
-  Log Log;
+  Log logService;
 
   @Inject
-  TradeConfig TradeConfig;
+  TradeConfig configService;
 
   @Inject
   @RestClient
@@ -90,8 +92,8 @@ public class TradeAction implements TradeService {
   @Override
   public MarketSummaryDataBean getMarketSummary() throws Exception {
 
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getMarketSummary()");
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getMarketSummary()");
     }
     
     /**
@@ -147,8 +149,8 @@ public class TradeAction implements TradeService {
    */
   @Override
   public OrderDataBean buy(String userID, String symbol, double quantity) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:buy", userID, symbol, new Double(quantity));
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:buy", userID, symbol, new Double(quantity));
     }
     return orderClient.buy(userID, symbol, quantity);
   }
@@ -164,22 +166,22 @@ public class TradeAction implements TradeService {
    */
   @Override
   public OrderDataBean sell(String userID, Integer holdingID) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:sell", userID, holdingID);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:sell", userID, holdingID);
     }
     return orderClient.sell(userID, holdingID);
   }
 
   /**
-   * Get the collection of all orders for a given account
+   * Get the collection of all orders for a given account.
    *
    * @param userID the customer account to retrieve orders for
    * @return Collection OrderDataBeans providing detailed order information
    */
   @Override
   public Collection<?> getOrders(String userID) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getOrders", userID);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getOrders", userID);
     }
     Collection<?> orderDataBeans = orderClient.getOrders(userID);
 
@@ -188,15 +190,15 @@ public class TradeAction implements TradeService {
 
   /**
    * Get the collection of completed orders for a given account that need to be
-   * alerted to the user
+   * alerted to the user.
    *
    * @param userID the customer account to retrieve orders for
    * @return Collection OrderDataBeans providing detailed order information
    */
   @Override
   public Collection<?> getClosedOrders(String userID) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getClosedOrders", userID);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getClosedOrders", userID);
     }
 
     Collection<?> orderDataBeans = orderClient.getClosedOrders(userID);
@@ -206,7 +208,7 @@ public class TradeAction implements TradeService {
 
   /**
    * Given a market symbol, price, and details, create and return a new
-   * {@link QuoteDataBean}
+   * {@link QuoteDataBean}.
    *
    * @param symbol the symbol of the stock
    * @param price  the current stock price
@@ -214,22 +216,22 @@ public class TradeAction implements TradeService {
    */
   @Override
   public QuoteDataBean createQuote(String symbol, String companyName) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:createQuote", symbol, companyName);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:createQuote", symbol, companyName);
     }
 
     return quoteClient.createQuote(symbol, companyName);
   }
 
   /**
-   * Return a collection of {@link QuoteDataBean}describing all current quotes
+   * Return a collection of {@link QuoteDataBean}describing all current quotes.
    *
    * @return the collection of QuoteDataBean
    */
   @Override
   public Collection<?> getAllQuotes() throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getAllQuotes");
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getAllQuotes");
     }
 
     return quoteClient.getAllQuotes();
@@ -238,19 +240,19 @@ public class TradeAction implements TradeService {
 
   /**
    * Return a {@link QuoteDataBean}describing a current quote for the given stock
-   * symbol
+   * symbol.
    *
    * @param symbol the stock symbol to retrieve the current Quote
    * @return the QuoteDataBean
    */
   @Override
   public QuoteDataBean getQuote(String symbol) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getQuote", symbol);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getQuote", symbol);
     }
     if ((symbol == null) || (symbol.length() == 0) || (symbol.length() > 10)) {
-      if (Log.doActionTrace()) {
-        Log.trace("TradeAction:getQuote   ---  primitive workload");
+      if (logService.doActionTrace()) {
+        logService.trace("TradeAction:getQuote   ---  primitive workload");
       }
       return new QuoteDataBean("Invalid symbol", "", 0.0, FinancialUtils.ZERO, FinancialUtils.ZERO, FinancialUtils.ZERO,
           FinancialUtils.ZERO, 0.0);
@@ -266,15 +268,15 @@ public class TradeAction implements TradeService {
   
   /**
    * Return the portfolio of stock holdings for the specified customer as a
-   * collection of HoldingDataBeans
+   * collection of HoldingDataBeans.
    *
    * @param userID the customer requesting the portfolio
    * @return Collection of the users portfolio of stock holdings
    */
   @Override
   public Collection<?> getHoldings(String userID) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getHoldings", userID);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getHoldings", userID);
     }
 
     Collection<?> holdingDataBeans = holdingClient.getHoldings(userID);
@@ -283,30 +285,30 @@ public class TradeAction implements TradeService {
   }
 
   /**
-   * Return a specific user stock holding identifed by the holdingID
+   * Return a specific user stock holding identifed by the holdingID.
    *
    * @param holdingID the holdingID to return
    * @return a HoldingDataBean describing the holding
    */
   @Override
   public HoldingDataBean getHolding(Integer holdingID) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getHolding", holdingID);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getHolding", holdingID);
     }
 
     return holdingClient.getHolding(holdingID);
   }
 
   /**
-   * Return an AccountDataBean object for userID describing the account
+   * Return an AccountDataBean object for userID describing the account.
    *
    * @param userID the account userID to lookup
    * @return User account data in AccountDataBean
    */
   @Override
   public AccountDataBean getAccountData(String userID) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getAccountData", userID);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getAccountData", userID);
     }
     AccountDataBean accountData = accountClient.getAccountData(userID);
 
@@ -314,14 +316,14 @@ public class TradeAction implements TradeService {
   }
 
   /**
-   * Return an AccountProfileDataBean for userID providing the users profile
+   * Return an AccountProfileDataBean for userID providing the users profile.
    *
    * @param userID the account userID to lookup
    */
   @Override
   public AccountProfileDataBean getAccountProfileData(String userID) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:getAccountProfileData", userID);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:getAccountProfileData", userID);
     }
     AccountProfileDataBean accountProfileData = accountClient.getAccountProfileData(userID);
 
@@ -330,14 +332,14 @@ public class TradeAction implements TradeService {
 
   /**
    * Update userID's account profile information using the provided
-   * AccountProfileDataBean object
+   * AccountProfileDataBean object.
    *
    * @param accountProfileData account profile data in AccountProfileDataBean
    */
   @Override
   public AccountProfileDataBean updateAccountProfile(AccountProfileDataBean accountProfileData) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:updateAccountProfile", accountProfileData);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:updateAccountProfile", accountProfileData);
     }
 
     accountProfileData = accountClient.updateAccountProfile(accountProfileData);
@@ -345,7 +347,7 @@ public class TradeAction implements TradeService {
   }
 
   /**
-   * Attempt to authenticate and login a user with the given password
+   * Attempt to authenticate and login a user with the given password.
    *
    * @param userID   the customer to login
    * @param password the password entered by the customer for authentication
@@ -353,21 +355,21 @@ public class TradeAction implements TradeService {
    */
   @Override
   public AccountDataBean login(String userID, String password) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:login", userID, password);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:login", userID, password);
     }
     return accountClient.login(userID, password);
   }
 
   /**
-   * Logout the given user
+   * Logout the given user.
    *
    * @param userID the customer to logout
    */
   @Override
   public void logout(String userID) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:logout", userID);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:logout", userID);
     }
 
     accountClient.logout(userID);
@@ -391,8 +393,8 @@ public class TradeAction implements TradeService {
   @Override
   public AccountDataBean register(String userID, String password, String fullname, String address, String email,
       String creditCard, BigDecimal openBalance) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:register", userID, password, fullname, address, email, creditCard, openBalance);
+    if (logService.doActionTrace()) {
+      logService.trace("TradeAction:register", userID, password, fullname, address, email, creditCard, openBalance);
     }
 
     return accountClient.register(userID, password, fullname, address, email, creditCard, openBalance);
@@ -404,19 +406,4 @@ public class TradeAction implements TradeService {
     return register(userID, password, fullname, address, email, creditCard, openBalance);
   }
 
-  /**
-   * Reset the TradeData by - removing all newly registered users by scenario
-   * servlet (i.e. users with userID's beginning with "ru:") * - removing all
-   * buy/sell order pairs - setting logoutCount = loginCount
-   *
-   * return statistics for this benchmark run
-   */
-  @Override
-  public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
-    // RunStatsDataBean runStatsData = trade.resetTrade(deleteAll);
-
-    // return runStatsData;
-    // @TODO
-    return null;
-  }  
 }

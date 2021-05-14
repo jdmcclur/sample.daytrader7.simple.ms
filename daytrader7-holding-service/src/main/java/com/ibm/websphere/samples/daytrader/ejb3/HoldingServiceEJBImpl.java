@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015, 2021
+ * (C) Copyright IBM Corporation 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.ibm.websphere.samples.daytrader.ejb3;
+
+import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
+import com.ibm.websphere.samples.daytrader.interfaces.HoldingService;
+import com.ibm.websphere.samples.daytrader.util.Log;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -32,10 +37,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
-import com.ibm.websphere.samples.daytrader.interfaces.HoldingService;
-import com.ibm.websphere.samples.daytrader.util.Log;
-
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @TransactionManagement(TransactionManagementType.CONTAINER)
@@ -45,12 +46,12 @@ public class HoldingServiceEJBImpl implements HoldingService {
   private EntityManager entityManager;
 
   @Inject
-  private Log Log;
+  private Log logService;
 
   @Override
   public List<HoldingDataBean> getHoldings(String userID) {
-    if (Log.doTrace()) {
-      Log.trace("TradeSLSBBean:getHoldings", userID);
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:getHoldings", userID);
     }
 
     CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -68,8 +69,8 @@ public class HoldingServiceEJBImpl implements HoldingService {
 
   @Override
   public HoldingDataBean getHolding(Integer holdingID) {
-    if (Log.doTrace()) {
-      Log.trace("TradeSLSBBean:getHolding", holdingID);
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:getHolding", holdingID);
     }
     return entityManager.find(HoldingDataBean.class, holdingID);
   }
@@ -85,8 +86,8 @@ public class HoldingServiceEJBImpl implements HoldingService {
 
   @Override
   public void removeHolding(Integer holdingID) {
-    if (Log.doTrace()) {
-      Log.trace("TradeSLSBBean:getHolding", holdingID);
+    if (logService.doTrace()) {
+      logService.trace("TradeSLSBBean:getHolding", holdingID);
     }
     HoldingDataBean holding = entityManager.find(HoldingDataBean.class, holdingID);
     entityManager.remove(holding);
