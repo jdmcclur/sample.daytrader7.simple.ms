@@ -50,7 +50,13 @@ public interface OrderClient {
   @Produces(MediaType.APPLICATION_JSON)
   public List<OrderDataBean> getClosedOrders(@PathParam("userId") String userId);
 
-  @GET
-  @Path("/db/createDB")
-  public Response createDB();
+    // DB ------
+
+    @GET
+    @Path("/db/createDB")
+    public Response createDB();
+  
+    @GET
+    @Path("/db/resetDB/{deleteAll}")
+    public Response resetDB(@PathParam("deleteAll") Boolean deleteAll);
 }

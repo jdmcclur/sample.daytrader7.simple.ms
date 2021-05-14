@@ -1,0 +1,149 @@
+version: "3.0"
+
+services:
+
+  daytrader7-account-db:
+    image: ibmcom/db2
+    container_name: daytrader7-account-db
+    privileged: true
+    networks:
+      - daytrader7
+    environment:
+      - DBNAME=tradedb
+      - DB2INST1_PASSWORD=db2inst1
+      - LICENSE=accept
+    volumes:
+      - daytrader-db2data-accounts:/database
+
+  daytrader7-holding-db:
+    image: ibmcom/db2
+    container_name: daytrader7-holding-db
+    privileged: true
+    networks:
+      - daytrader7
+    environment:
+      - DBNAME=tradedb
+      - DB2INST1_PASSWORD=db2inst1
+      - LICENSE=accept
+    volumes:
+      - daytrader-db2data-holdings:/database
+
+  daytrader7-order-db:
+    image: ibmcom/db2
+    container_name: daytrader7-order-db
+    privileged: true
+    networks:
+      - daytrader7
+    environment:
+      - DBNAME=tradedb
+      - DB2INST1_PASSWORD=db2inst1
+      - LICENSE=accept
+    volumes:
+      - daytrader-db2data-orders:/database
+
+  daytrader7-quote-db:
+    image: ibmcom/db2
+    container_name: daytrader7-quote-db
+    privileged: true
+    networks:
+      - daytrader7
+    environment:
+      - DBNAME=tradedb
+      - DB2INST1_PASSWORD=db2inst1
+      - LICENSE=accept
+    volumes:
+      - daytrader-db2data-quotes:/database
+
+  daytrader7-frontend-service:
+    build: ./daytrader7-frontend-service
+    image: daytrader7-frontend-service
+    container_name: daytrader7-frontend-service
+    networks:
+      - daytrader7
+    ports:
+      - "9080:9080"
+    environment:
+      - JVM_ARGS=-DaccountClient/mp-rest/url=http://daytrader7-account-service:9080/accounts -DholdingClient/mp-rest/url=http://daytrader7-holding-service:9080/holdings -DorderClient/mp-rest/url=http://daytrader7-order-service:9080/orders -DquoteClient/mp-rest/url=http://daytrader7-quote-service:9080/quotes
+      - MAX_QUOTES=100
+      - MAX_USERS=100
+
+  daytrader7-account-service:
+    build: 
+      context: ./daytrader7-account-service
+      dockerfile: Dockerfile-db2
+    image: daytrader7-account-service
+    container_name: daytrader7-account-service
+    networks:
+      - daytrader7
+    environment:
+      - DB_HOST=daytrader7-account-db
+      - DB_PORT=50000
+      - DB_NAME=TRADEDB
+      - DB_USER=db2inst1
+      - DB_PASSWORD=db2inst1
+    volumes_from:
+      - daytrader7-account-db
+
+  daytrader7-holding-service:
+    build: 
+      context: ./daytrader7-holding-service
+      dockerfile: Dockerfile-db2
+    image: daytrader7-holding-service
+    container_name: daytrader7-holding-service
+    networks:
+      - daytrader7
+    environment:
+      - DB_HOST=daytrader7-holding-db
+      - DB_PORT=50000
+      - DB_NAME=TRADEDB
+      - DB_USER=db2inst1
+      - DB_PASSWORD=db2inst1
+    volumes_from:
+      - daytrader7-holding-db
+
+  daytrader7-order-service:
+    build: 
+      context: ./daytrader7-order-service
+      dockerfile: Dockerfile-db2
+    image: daytrader7-order-service
+    container_name: daytrader7-order-service
+    networks:
+      - daytrader7
+    environment:
+      - JVM_ARGS=-DaccountClient/mp-rest/url=http://daytrader7-account-service:9080/accounts -DholdingClient/mp-rest/url=http://daytrader7-holding-service:9080/holdings -DorderClient/mp-rest/url=http://daytrader7-order-service:9080/orders -DquoteClient/mp-rest/url=http://daytrader7-quote-service:9080/quotes
+      - DB_HOST=daytrader7-order-db
+      - DB_PORT=50000
+      - DB_NAME=TRADEDB
+      - DB_USER=db2inst1
+      - DB_PASSWORD=db2inst1
+    volumes_from:
+      - daytrader7-order-db
+
+  daytrader7-quote-service:
+    build: 
+      context: ./daytrader7-quote-service
+      dockerfile: Dockerfile-db2
+    image: daytrader7-quote-service
+    container_name: daytrader7-quote-service
+    networks:
+      - daytrader7
+    environment:
+      - DB_HOST=daytrader7-quote-db
+      - DB_PORT=50000
+      - DB_NAME=TRADEDB
+      - DB_USER=db2inst1
+      - DB_PASSWORD=db2inst1
+    volumes_from:
+      - daytrader7-quote-db
+
+networks:
+  daytrader7:
+    external: true
+
+volumes:
+  daytrader-db2data-accounts:
+  daytrader-db2data-holdings:
+  daytrader-db2data-orders:
+  daytrader-db2data-quotes:
+  
+ 

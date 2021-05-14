@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -419,9 +420,9 @@ public class TradeServletAction implements Serializable {
 
     try {
       // Get the holdiings for this user
-
-      Collection<QuoteDataBean> quoteDataBeans = new ArrayList<QuoteDataBean>();
+      List<QuoteDataBean> quoteDataBeans = new ArrayList<QuoteDataBean>();
       Collection<?> holdingDataBeans = tradeService.getHoldings(userID);
+      StringBuffer symbols = new StringBuffer();
 
       // Walk through the collection of user
       // holdings and creating a list of quotes
@@ -430,9 +431,14 @@ public class TradeServletAction implements Serializable {
         Iterator<?> it = holdingDataBeans.iterator();
         while (it.hasNext()) {
           HoldingDataBean holdingData = (HoldingDataBean) it.next();
-          QuoteDataBean quoteData = tradeService.getQuote(holdingData.getQuoteSymbol());
-          quoteDataBeans.add(quoteData);
+          if (symbols.length() > 0) {
+            symbols.append(",");
+          }
+          symbols.append(holdingData.getQuoteSymbol());
         }
+
+        quoteDataBeans = tradeService.getQuotes(symbols.toString());
+
       } else {
         results = results + ".  Your portfolio is empty.";
       }
@@ -440,9 +446,11 @@ public class TradeServletAction implements Serializable {
       req.setAttribute("holdingDataBeans", holdingDataBeans);
       req.setAttribute("quoteDataBeans", quoteDataBeans);
       requestDispatch(ctx, req, resp, userID, PORTFOLIO_PAGE);
-    } catch (java.lang.IllegalArgumentException e) { // this is a user
-      // error so I will
-      // forward them to another page rather than throw a 500
+    } catch (
+
+    java.lang.IllegalArgumentException e) { // this is a user
+                                            // error so I will
+                                            // forward them to another page rather than throw a 500
       req.setAttribute("results", results + "illegal argument:" + e.getMessage());
       requestDispatch(ctx, req, resp, userID, PORTFOLIO_PAGE);
       // log the exception with an error level of 3 which means, handled
@@ -474,12 +482,8 @@ public class TradeServletAction implements Serializable {
 
     try {
       // @TODO get a batch results from order service.
-      Collection<QuoteDataBean> quoteDataBeans = new ArrayList<QuoteDataBean>();
-      String[] symbolsSplit = symbols.split(",");
-      for (String symbol : symbolsSplit) {
-        QuoteDataBean quoteData = tradeService.getQuote(symbol.trim());
-        quoteDataBeans.add(quoteData);
-      }
+      List<QuoteDataBean> quoteDataBeans = tradeService.getQuotes(symbols);
+
       req.setAttribute("quoteDataBeans", quoteDataBeans);
       requestDispatch(ctx, req, resp, userID, QUOTE_PAGE);
 

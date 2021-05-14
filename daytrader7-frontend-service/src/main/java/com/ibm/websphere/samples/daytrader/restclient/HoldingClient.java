@@ -46,8 +46,14 @@ public interface HoldingClient {
   @Path("/removeHolding/{holdingId}")
   public void removeHolding(@PathParam("holdingId") Integer holdingId);
 
-  @GET
-  @Path("/db/createDB")
-  public Response createDB();
+    // DB ------
+
+    @GET
+    @Path("/db/createDB")
+    public Response createDB();
+  
+    @GET
+    @Path("/db/resetDB/{deleteAll}")
+    public Response resetDB(@PathParam("deleteAll") Boolean deleteAll);
 
 }

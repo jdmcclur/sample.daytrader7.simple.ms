@@ -17,6 +17,7 @@ package com.ibm.websphere.samples.daytrader;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
@@ -149,12 +150,7 @@ public class TradeAction implements TradeService {
     if (Log.doActionTrace()) {
       Log.trace("TradeAction:buy", userID, symbol, new Double(quantity));
     }
-    OrderDataBean orderData = orderClient.buy(userID, symbol, quantity);
-
-    // after the purchase or sell of a stock, update the stocks volume and price
-    updateQuotePriceVolume(symbol, quantity);
-
-    return orderData;
+    return orderClient.buy(userID, symbol, quantity);
   }
 
   /**
@@ -171,13 +167,7 @@ public class TradeAction implements TradeService {
     if (Log.doActionTrace()) {
       Log.trace("TradeAction:sell", userID, holdingID);
     }
-    OrderDataBean orderData = orderClient.sell(userID, holdingID);
-
-    if (!orderData.getOrderStatus().equalsIgnoreCase("cancelled")) {
-      updateQuotePriceVolume(orderData.getQuoteSymbol(), orderData.getQuantity());
-    }
-
-    return orderData;
+    return orderClient.sell(userID, holdingID);
   }
 
   /**
@@ -266,34 +256,14 @@ public class TradeAction implements TradeService {
           FinancialUtils.ZERO, 0.0);
     }
 
-    QuoteDataBean quoteData = quoteClient.getQuote(symbol);
-
-    return quoteData;
+    return quoteClient.getQuote(symbol);
   }
 
-  /**
-   * Update the stock quote price for the specified stock symbol
-   *
-   * @param symbol for stock quote to update
-   * @return the QuoteDataBean describing the stock
-   */
-  /* avoid data collision with synch */
   @Override
-  public QuoteDataBean updateQuotePriceVolume(String symbol, double sharesTraded) throws Exception {
-    if (Log.doActionTrace()) {
-      Log.trace("TradeAction:updateQuotePriceVolume", symbol, new Double(sharesTraded));
-    }
-    QuoteDataBean quoteData = null;
-    try {
-      quoteData = quoteClient.updateQuotePriceVolume(symbol, sharesTraded);
-    } catch (Exception e) {
-      Log.error("TradeAction:updateQuotePrice -- ", e);
-    }
-
-    return quoteData;
-
+  public List<QuoteDataBean> getQuotes(String symbols) {
+    return quoteClient.getQuotes(symbols);
   }
-
+  
   /**
    * Return the portfolio of stock holdings for the specified customer as a
    * collection of HoldingDataBeans
@@ -448,5 +418,5 @@ public class TradeAction implements TradeService {
     // return runStatsData;
     // @TODO
     return null;
-  }
+  }  
 }

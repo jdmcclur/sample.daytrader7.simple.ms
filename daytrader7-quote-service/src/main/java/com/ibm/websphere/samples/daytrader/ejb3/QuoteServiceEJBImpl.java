@@ -26,11 +26,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.EJBException;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -50,20 +46,15 @@ import javax.persistence.criteria.Root;
 public class QuoteServiceEJBImpl implements QuoteService {
 
   private final Random r0 = new Random(System.currentTimeMillis());
-  public final int ROUND = BigDecimal.ROUND_HALF_UP;
-  public final int SCALE = 2;
+  private final int ROUND = BigDecimal.ROUND_HALF_UP;
+  private final int SCALE = 2;
   private final BigDecimal ONE = new BigDecimal(1.0);
-  public final BigDecimal ZERO = (new BigDecimal(0.00)).setScale(SCALE);
-  private BigDecimal pennyStockPrice;
-  private BigDecimal pennyStockRevoveryMiracleMultiplier;
-  private BigDecimal maximumStockPrice;
-  private BigDecimal maximumStockSplitMultiplier;
+  private final BigDecimal ZERO = (new BigDecimal(0.00)).setScale(SCALE);
+  private final BigDecimal PENNY_STOCK_PRICE = new BigDecimal(0.01).setScale(2, BigDecimal.ROUND_HALF_UP);
+  private final BigDecimal MAXIMUM_STOCK_PRICE = new BigDecimal(400).setScale(2, BigDecimal.ROUND_HALF_UP);
 
   @PersistenceContext
   private EntityManager entityManager;
-
-  @Resource
-  private SessionContext context;
 
   @Inject
   private Log Log;
@@ -106,7 +97,7 @@ public class QuoteServiceEJBImpl implements QuoteService {
   }
 
   @Override
-  public QuoteDataBean updateQuotePriceVolume(String symbol, double sharesTraded) {
+  public BigDecimal updateQuotePriceVolume(String symbol, double sharesTraded, String orderType) {
 
     if (Log.doTrace()) {
       Log.trace("TradeSLSBBean:updateQuote", symbol, sharesTraded);
@@ -119,19 +110,25 @@ public class QuoteServiceEJBImpl implements QuoteService {
     BigDecimal oldPrice = quote.getPrice();
     BigDecimal openPrice = quote.getOpen();
 
-    BigDecimal changeFactor = getRandomPriceChangeFactor();
-
-    if (oldPrice.equals(pennyStockPrice)) {
-      changeFactor = pennyStockRevoveryMiracleMultiplier;
-    } else if (oldPrice.compareTo(maximumStockPrice) > 0) {
-      changeFactor = maximumStockSplitMultiplier;
-    }
-
+    BigDecimal changeFactor = getRandomPriceChangeFactor(orderType);   
     BigDecimal newPrice = changeFactor.multiply(oldPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+    if (newPrice.compareTo(PENNY_STOCK_PRICE) < 0) {
+      newPrice = PENNY_STOCK_PRICE;
+    } else if (newPrice.compareTo(MAXIMUM_STOCK_PRICE) > 0) {
+      newPrice = MAXIMUM_STOCK_PRICE;
+    }
 
     quote.setPrice(newPrice);
     quote.setChange(newPrice.subtract(openPrice).doubleValue());
     quote.setVolume(quote.getVolume() + sharesTraded);
+
+    if (newPrice.compareTo(quote.getLow()) < 0) {
+      quote.setLow(newPrice);
+    } else if (newPrice.compareTo(quote.getHigh()) > 0) {
+      quote.setHigh(newPrice);
+    }
+
     entityManager.merge(quote);
 
     /*
@@ -139,7 +136,7 @@ public class QuoteServiceEJBImpl implements QuoteService {
      * sharesTraded); } recentQuotePriceChangeList.add(quote);
      */
 
-    return quote;
+    return quote.getPrice();
 
   }
 
@@ -154,22 +151,10 @@ public class QuoteServiceEJBImpl implements QuoteService {
 
   }
 
-  @PostConstruct
-  public void postConstruct() {
-    pennyStockPrice = new BigDecimal(0.01);
-    pennyStockPrice = pennyStockPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
-    pennyStockRevoveryMiracleMultiplier = new BigDecimal(600.0);
-    pennyStockRevoveryMiracleMultiplier.setScale(2, BigDecimal.ROUND_HALF_UP);
-    maximumStockPrice = new BigDecimal(400);
-    maximumStockPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
-    maximumStockSplitMultiplier = new BigDecimal(0.5);
-    maximumStockSplitMultiplier.setScale(2, BigDecimal.ROUND_HALF_UP);
-  }
-
-  private BigDecimal getRandomPriceChangeFactor() {
+  private BigDecimal getRandomPriceChangeFactor(String orderType) {
     // CJB (DAYTRADER-25) - Vary change factor between 1.1 and 0.9
     double percentGain = randomFloat(1) * 0.1;
-    if (random() < .5) {
+    if (orderType.equals("sell")) {
       percentGain *= -1;
     }
     percentGain += 1;
@@ -246,5 +231,18 @@ public class QuoteServiceEJBImpl implements QuoteService {
         }
         
         return new MarketSummaryDataBean(TSIA, openTSIA, totalVolume, topGainers, topLosers);
+  }
+
+  @Override
+  public List<QuoteDataBean> getQuotes(String symbols) {
+    List<QuoteDataBean> quoteDataBeans = new ArrayList<QuoteDataBean>();
+
+    String[] symbolsSplit = symbols.split(",");
+    for (String symbol : symbolsSplit) {
+      QuoteDataBean quoteData = entityManager.find(QuoteDataBean.class, symbol.trim());
+      quoteDataBeans.add(quoteData);
+    }
+    return quoteDataBeans;
+
   }
 }

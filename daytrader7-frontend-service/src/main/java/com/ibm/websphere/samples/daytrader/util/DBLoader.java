@@ -16,7 +16,6 @@
 
 package com.ibm.websphere.samples.daytrader.util;
 
-import com.ibm.websphere.samples.daytrader.beans.RunStatsDataBean;
 import com.ibm.websphere.samples.daytrader.entities.AccountDataBean;
 import com.ibm.websphere.samples.daytrader.restclient.AccountClient;
 import com.ibm.websphere.samples.daytrader.restclient.HoldingClient;
@@ -79,11 +78,13 @@ public class DBLoader {
     int errorCount = 0; // Give up gracefully after 10 errors
 
     out.println("<BR>TradeBuildDB: **** Creating " + TradeConfig.getMaxQuotes() + " Quotes ****</BR>");
-    // Attempt to delete all of the Trade users and Trade Quotes first
+    
 
     try {
+      // Attempt to delete all of the Trade users and Trade Quotes first
       resetTrade(true);
     } catch (Exception e) {
+      e.printStackTrace();
       Log.error(e, "TradeBuildDB: Unable to delete Trade users (uid:0, uid:1, ...) and Trade Quotes (s:0, s:1, ...)");
     }
     for (int i = 0; i < TradeConfig.getMaxQuotes(); i++) {
@@ -141,6 +142,7 @@ public class DBLoader {
             symbol = randomSymbol();
             quantity = randomQuantity();
             orderClient.buy(userID, symbol, quantity);
+            quoteClient.updateQuotePriceVolume(symbol, quantity, "buy");
           } // end-for
           if (i % 50 == 0) {
             out.println(" has " + holdings + " holdings.");
@@ -156,200 +158,24 @@ public class DBLoader {
           String error = "Populate Trade DB aborting after 10 user registration errors. Check the log for details. <BR><BR> Exception is: <BR>"
               + e.toString();
           Log.error(e, error);
+          e.printStackTrace();
           throw e;
+         
         }
       }
     } // end-for
     out.println("</BODY>");
+    System.out.println("done");
   }
-
-  /*
-   * public static String checkDBProductName() throws Exception { Connection conn
-   * = null; String dbProductName = null;
-   * 
-   * try { if (Log.doTrace()) { Log.traceEnter("TradeDirect:checkDBProductName");
-   * }
-   * 
-   * conn = datasource.getConnection(); DatabaseMetaData dbmd =
-   * conn.getMetaData(); dbProductName = dbmd.getDatabaseProductName(); } catch
-   * (SQLException e) { Log.error(e,
-   * "TradeDirect:checkDBProductName() -- Error checking the Daytrader Database Product Name"
-   * ); } finally { conn.close(); } return dbProductName; }
-   */
-
-  /*
-   * private static boolean recreateDBTables(Object[] sqlBuffer,
-   * java.io.PrintWriter out) throws Exception { // Clear MDB Statistics
-   * MDBStats.getInstance().reset();
-   * 
-   * Connection conn = null; boolean success = false; try { if (Log.doTrace()) {
-   * Log.traceEnter("TradeDirect:recreateDBTables"); }
-   * 
-   * conn = datasource.getConnection();
-   * 
-   * Statement stmt = conn.createStatement(); int bufferLength = sqlBuffer.length;
-   * for (int i = 0; i < bufferLength; i++) { try { stmt.executeUpdate((String)
-   * sqlBuffer[i]); // commit(conn); } catch (SQLException ex) { // Ignore DROP
-   * statements as tables won't always exist. if (((String)
-   * sqlBuffer[i]).indexOf("DROP TABLE") < 0) { Log.error(
-   * "TradeDirect:recreateDBTables SQL Exception thrown on executing the foll sql command: "
-   * + sqlBuffer[i], ex);
-   * out.println("<BR>SQL Exception thrown on executing the foll sql command: <I>"
-   * + sqlBuffer[i] + "</I> . Check log for details.</BR>"); } } } stmt.close();
-   * conn.commit(); success = true; } catch (Exception e) { Log.error(e,
-   * "TradeDirect:recreateDBTables() -- Error dropping and recreating the database tables"
-   * ); } finally { conn.close(); } return success; }
-   */
-
-  public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception {
-    return new RunStatsDataBean();
+  
+  public void resetTrade(Boolean deleteAll) throws Exception {
+    System.out.println("resetTrade " + deleteAll);
+    quoteClient.resetDB(deleteAll);
+    accountClient.resetDB(deleteAll);
+    holdingClient.resetDB(deleteAll);
+    orderClient.resetDB(deleteAll);
   }
-  /*
-   * public RunStatsDataBean resetTrade(boolean deleteAll) throws Exception { //
-   * Clear MDB Statistics MDBStats.getInstance().reset(); // Reset Trade
-   * 
-   * RunStatsDataBean runStatsData = new RunStatsDataBean(); Connection conn =
-   * null; try { if (Log.doTrace()) {
-   * Log.traceEnter("TradeDirect:resetTrade deleteAll rows=" + deleteAll); } conn
-   * = datasource.getConnection(); PreparedStatement stmt = null;
-   * 
-   * if (deleteAll) { try { stmt = getStatement(conn, "delete from quoteejb");
-   * stmt.executeUpdate(); stmt.close(); stmt = getStatement(conn,
-   * "delete from accountejb"); stmt.executeUpdate(); stmt.close(); stmt =
-   * getStatement(conn, "delete from accountprofileejb"); stmt.executeUpdate();
-   * stmt.close(); stmt = getStatement(conn, "delete from holdingejb");
-   * stmt.executeUpdate(); stmt.close(); stmt = getStatement(conn,
-   * "delete from orderejb"); stmt.executeUpdate(); stmt.close(); // FUTURE: -
-   * DuplicateKeyException - For now, don't start at // zero as KeySequenceDirect
-   * and KeySequenceBean will still // give out // the cached Block and then
-   * notice this change. Better // solution is // to signal both classes to drop
-   * their cached blocks // stmt = getStatement(conn, "delete from keygenejb"); //
-   * stmt.executeUpdate(); // stmt.close(); conn.commit(); } catch (Exception e) {
-   * Log.error(e,
-   * "TradeDirect:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database"
-   * ); } return runStatsData; }
-   * 
-   * stmt = getStatement(conn,
-   * "delete from holdingejb where holdingejb.account_accountid is null");
-   * stmt.executeUpdate(); stmt.close();
-   * 
-   * // Count and Delete newly registered users (users w/ id that start // "ru:%":
-   * stmt = getStatement(conn,
-   * "delete from accountprofileejb where userid like 'ru:%'");
-   * stmt.executeUpdate(); stmt.close();
-   * 
-   * stmt = getStatement(conn,
-   * "delete from orderejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')"
-   * ); stmt.executeUpdate(); stmt.close();
-   * 
-   * stmt = getStatement(conn,
-   * "delete from holdingejb where account_accountid in (select accountid from accountejb a where a.profile_userid like 'ru:%')"
-   * ); stmt.executeUpdate(); stmt.close();
-   * 
-   * stmt = getStatement(conn,
-   * "delete from accountejb where profile_userid like 'ru:%'"); int newUserCount
-   * = stmt.executeUpdate(); runStatsData.setNewUserCount(newUserCount);
-   * stmt.close();
-   * 
-   * // Count of trade users stmt = getStatement(conn,
-   * "select count(accountid) as \"tradeUserCount\" from accountejb a where a.profile_userid like 'uid:%'"
-   * );
-   * 
-   * ResultSet rs = null;
-   * 
-   * rs = stmt.executeQuery(); rs.next(); int tradeUserCount =
-   * rs.getInt("tradeUserCount"); runStatsData.setTradeUserCount(tradeUserCount);
-   * stmt.close();
-   * 
-   * rs.close(); // Count of trade stocks stmt = getStatement(conn,
-   * "select count(symbol) as \"tradeStockCount\" from quoteejb a where a.symbol like 's:%'"
-   * ); rs = stmt.executeQuery(); rs.next(); int tradeStockCount =
-   * rs.getInt("tradeStockCount");
-   * runStatsData.setTradeStockCount(tradeStockCount); stmt.close();
-   * 
-   * // Count of trade users login, logout stmt = getStatement(conn,
-   * "select sum(loginCount) as \"sumLoginCount\", sum(logoutCount) as \"sumLogoutCount\" "
-   * + "from accountejb a where  a.profile_userID like 'uid:%'"); rs =
-   * stmt.executeQuery(); rs.next(); int sumLoginCount =
-   * rs.getInt("sumLoginCount"); int sumLogoutCount = rs.getInt("sumLogoutCount");
-   * runStatsData.setSumLoginCount(sumLoginCount);
-   * runStatsData.setSumLogoutCount(sumLogoutCount); stmt.close();
-   * 
-   * rs.close(); // Update logoutcount and loginCount back to zero
-   * 
-   * stmt = getStatement(conn,
-   * "update accountejb set logoutCount=0, loginCount=0 where profile_userID like 'uid:%'"
-   * ); stmt.executeUpdate(); stmt.close();
-   * 
-   * // count holdings for trade users stmt = getStatement(conn,
-   * "select count(holdingid) as \"holdingCount\" from holdingejb h where h.account_accountid in "
-   * +
-   * "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
-   * 
-   * rs = stmt.executeQuery(); rs.next(); int holdingCount =
-   * rs.getInt("holdingCount"); runStatsData.setHoldingCount(holdingCount);
-   * stmt.close(); rs.close();
-   * 
-   * // count orders for trade users stmt = getStatement(conn,
-   * "select count(orderid) as \"orderCount\" from orderejb o where o.account_accountid in "
-   * +
-   * "(select accountid from accountejb a where a.profile_userid like 'uid:%')");
-   * 
-   * rs = stmt.executeQuery(); rs.next(); int orderCount =
-   * rs.getInt("orderCount"); runStatsData.setOrderCount(orderCount);
-   * stmt.close(); rs.close();
-   * 
-   * // count orders by type for trade users stmt = getStatement(conn,
-   * "select count(orderid) \"buyOrderCount\"from orderejb o where (o.account_accountid in "
-   * +
-   * "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND "
-   * + " (o.orderType='buy')");
-   * 
-   * rs = stmt.executeQuery(); rs.next(); int buyOrderCount =
-   * rs.getInt("buyOrderCount"); runStatsData.setBuyOrderCount(buyOrderCount);
-   * stmt.close(); rs.close();
-   * 
-   * // count orders by type for trade users stmt = getStatement(conn,
-   * "select count(orderid) \"sellOrderCount\"from orderejb o where (o.account_accountid in "
-   * +
-   * "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND "
-   * + " (o.orderType='sell')");
-   * 
-   * rs = stmt.executeQuery(); rs.next(); int sellOrderCount =
-   * rs.getInt("sellOrderCount"); runStatsData.setSellOrderCount(sellOrderCount);
-   * stmt.close(); rs.close();
-   * 
-   * // Delete cancelled orders stmt = getStatement(conn,
-   * "delete from orderejb where orderStatus='cancelled'"); int
-   * cancelledOrderCount = stmt.executeUpdate();
-   * runStatsData.setCancelledOrderCount(cancelledOrderCount); stmt.close();
-   * rs.close();
-   * 
-   * // count open orders by type for trade users stmt = getStatement(conn,
-   * "select count(orderid) \"openOrderCount\"from orderejb o where (o.account_accountid in "
-   * +
-   * "(select accountid from accountejb a where a.profile_userid like 'uid:%')) AND "
-   * + " (o.orderStatus='open')");
-   * 
-   * rs = stmt.executeQuery(); rs.next(); int openOrderCount =
-   * rs.getInt("openOrderCount"); runStatsData.setOpenOrderCount(openOrderCount);
-   * 
-   * stmt.close(); rs.close(); // Delete orders for holding which have been
-   * purchased and sold stmt = getStatement(conn,
-   * "delete from orderejb where holding_holdingid is null"); int
-   * deletedOrderCount = stmt.executeUpdate();
-   * runStatsData.setDeletedOrderCount(deletedOrderCount); stmt.close();
-   * rs.close();
-   * 
-   * conn.commit();
-   * 
-   * System.out.println("TradeDirect:reset Run stats data\n\n" + runStatsData); }
-   * catch (Exception e) { Log.error(e, "Failed to reset Trade"); conn.rollback();
-   * throw e; } finally { conn.close(); } return runStatsData;
-   * 
-   * }
-   */
-
+  
   private String randomFullName() {
     return "first:" + randomInt(1000) + " last:" + randomInt(5000);
   }

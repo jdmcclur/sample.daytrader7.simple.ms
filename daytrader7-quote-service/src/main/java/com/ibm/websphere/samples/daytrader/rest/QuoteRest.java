@@ -67,6 +67,14 @@ public class QuoteRest {
     return quoteService.getQuote(symbol).getPrice();
   }
 
+  @POST
+  @Path("/getQuotes")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public List<QuoteDataBean> getQuotes(@FormParam("symbols") String symbols) {
+    return quoteService.getQuotes(symbols);
+  }
+
   @GET
   @Path("/getAllQuotes")
   @Produces(MediaType.APPLICATION_JSON)
@@ -78,10 +86,11 @@ public class QuoteRest {
   @POST
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
-  public QuoteDataBean updateQuotePriceVolume(
+  public BigDecimal updateQuotePriceVolume(
       @FormParam("symbol") String symbol, 
-      @FormParam("sharesTraded") double sharesTraded) throws Exception {  
-        return quoteService.updateQuotePriceVolume(symbol, sharesTraded);
+      @FormParam("sharesTraded") double sharesTraded,
+      @FormParam("orderType") String orderType) throws Exception {  
+        return quoteService.updateQuotePriceVolume(symbol, sharesTraded, orderType);
   }
 
   @GET

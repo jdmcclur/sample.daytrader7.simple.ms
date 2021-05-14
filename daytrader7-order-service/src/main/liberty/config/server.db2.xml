@@ -11,21 +11,21 @@
     <httpOptions maxKeepAliveRequests="-1" />
   </httpEndpoint>
 
-  <webApplication name="daytrader7-quote-service" location="daytrader7-quote-service-1.0-SNAPSHOT.war" context-root="/quotes">
+  <webApplication name="daytrader7-order-service" location="daytrader7-order-service-1.0-SNAPSHOT.war" context-root="/orders">
     <!-- enable visibility to third party apis -->
     <classloader apiTypeVisibility="api,ibm-api,spec,stable,third-party" />
   </webApplication>
 
   <connectionManager agedTimeout="-1" connectionTimeout="0" id="conMgr1" maxIdleTime="-1" maxPoolSize="100" minPoolSize="100" purgePolicy="FailingConnectionOnly" reapTime="-1" />
 
-  <jdbcDriver id="DerbyEmbedded" libraryRef="DerbyLib" />
-  <library filesetRef="DerbyFileset" id="DerbyLib" />
-  <fileset dir="${shared.resource.dir}/DerbyLibs" id="DerbyFileset" includes="derby-10.14.2.0.jar" />
+  <jdbcDriver id="DB2JCC" libraryRef="DB2JCCLib" />
+  <library id="DB2JCCLib" filesetRef="DB2JCCFileset" />
+  <fileset id="DB2JCCFileset" dir="${shared.resource.dir}/db2jars" includes="db2jcc4.jar" />
 
-  <authData id="TradeDataSourceAuthData" password="db_password" user="db_username" />
-  <authData id="TradeAdminAuthData" password="db_password" user="db_username" />
+  <authData id="TradeDataSourceAuthData" user="${DB_USER}" password="${DB_PASSWORD}" />
+  <authData id="TradeAdminAuthData" user="${DB_USER}" password="${DB_PASSWORD}" />
 
-  <dataSource connectionManagerRef="conMgr1" id="DefaultDataSource" isolationLevel="TRANSACTION_READ_COMMITTED" jdbcDriverRef="DerbyEmbedded" jndiName="jdbc/TradeDataSource" statementCacheSize="60">
-    <properties.derby.embedded createDatabase="create" databaseName="${shared.resource.dir}/data/tradedb" password="db_password" user="db_username" />
+  <dataSource jndiName="jdbc/TradeDataSource" jdbcDriverRef="DB2JCC" id="DefaultDataSource" connectionManagerRef="conMgr1" statementCacheSize="60" isolationLevel="TRANSACTION_READ_COMMITTED" type="javax.sql.ConnectionPoolDataSource">
+    <properties serverName="${DB_HOST}" portNumber="${DB_PORT}" databaseName="${DB_NAME}" driverType="4" user="${DB_USER}" password="${DB_PASSWORD}" />
   </dataSource>
 </server>

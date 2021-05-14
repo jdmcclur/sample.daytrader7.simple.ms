@@ -225,11 +225,7 @@ public class DBUtil {
   }
 
   public void resetTrade(boolean deleteAll) throws Exception {
-    // Clear MDB Statistics
-    // MDBStats.getInstance().reset();
-    // Reset Trade
 
-    // RunStatsDataBean runStatsData = new RunStatsDataBean();
     Connection conn = null;
     try {
       if (Log.doTrace()) {
@@ -247,6 +243,7 @@ public class DBUtil {
         } catch (Exception e) {
           Log.error(e, "DBUtil:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database");
         }
+        System.out.println("holdings deleted\n\n");
         return;
       }
 
@@ -258,7 +255,7 @@ public class DBUtil {
       stmt.executeUpdate();
       stmt.close();
 
-      System.out.println("accounts reset\n\n");
+      System.out.println("holdings reset\n\n");
     } catch (Exception e) {
       Log.error(e, "Failed to reset Trade");
       conn.rollback();

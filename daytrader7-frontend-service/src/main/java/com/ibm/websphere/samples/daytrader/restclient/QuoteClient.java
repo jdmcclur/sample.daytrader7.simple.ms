@@ -23,41 +23,53 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 @Path("/")
 public interface QuoteClient {
 
+  @GET
+  @Path("/getQuote/{symbol}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public QuoteDataBean getQuote(@PathParam("symbol") String symbol);
+
   @Path("/getQuotePrice/{symbol}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public BigDecimal getQuotePrice(@PathParam("symbol") String symbol);
+
+  @POST
+  @Path("/getQuotes")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public List<QuoteDataBean> getQuotes(@FormParam("symbols") String symbols);
 
   @GET
   @Path("/getAllQuotes")
   @Produces(MediaType.APPLICATION_JSON)
   public List<QuoteDataBean> getAllQuotes();
 
-  @Path("/createQuote")
+  @GET
+  @Path("/getMarketSummary")
+  @Produces(MediaType.APPLICATION_JSON)
+  public MarketSummaryDataBean getMarketSummary();
+
   @POST
+  @Path("/createQuote")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
   public QuoteDataBean createQuote(@FormParam("symbol") String symbol, @FormParam("companyName") String companyName);
 
-  @Path("/getQuote/{symbol}")
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public QuoteDataBean getQuote(@PathParam("symbol") String symbol);
-
-  @Path("/updateQuotePriceVolume")
   @POST
+  @Path("/updateQuotePriceVolume")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
-  public QuoteDataBean updateQuotePriceVolume(
-      @FormParam("symbol") String symbol, 
-      @FormParam("sharesTraded") double sharesTraded);
+  public BigDecimal updateQuotePriceVolume(@FormParam("symbol") String symbol,
+      @FormParam("sharesTraded") double sharesTraded,
+      @FormParam("orderType") String orderType);
+
+  // DB ------
 
   @GET
   @Path("/db/createDB")
   public Response createDB();
 
   @GET
-  @Path("/getMarketSummary")
-  @Produces(MediaType.APPLICATION_JSON)
-  public MarketSummaryDataBean getMarketSummary();
+  @Path("/db/resetDB/{deleteAll}")
+  public Response resetDB(@PathParam("deleteAll") Boolean deleteAll);
 }

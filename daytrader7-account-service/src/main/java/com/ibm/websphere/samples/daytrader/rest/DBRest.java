@@ -18,9 +18,9 @@ package com.ibm.websphere.samples.daytrader.rest;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 import com.ibm.websphere.samples.daytrader.util.DBUtil;
@@ -39,6 +39,18 @@ public class DBRest {
     
     try {
       dbUtil.createDB();
+      return Response.ok().build();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return Response.serverError().build();
+    }
+  }
+
+  @GET
+  @Path("/resetDB/{deleteAll}")
+  public Response resetDB(@PathParam("deleteAll") Boolean deleteAll) {
+    try {
+      dbUtil.resetTrade(deleteAll);
       return Response.ok().build();
     } catch (Exception e) {
       e.printStackTrace();

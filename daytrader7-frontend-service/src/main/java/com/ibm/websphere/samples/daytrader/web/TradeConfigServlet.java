@@ -67,10 +67,9 @@ public class TradeConfigServlet extends HttpServlet {
    * current Trade runtime configuration Creation date: (2/8/2000 3:43:59 PM)
    */
   void doConfigDisplay(HttpServletRequest req, HttpServletResponse resp, String results) throws Exception {
+    
 
-    TradeConfig currentConfig = new TradeConfig();
-
-    req.setAttribute("tradeConfig", currentConfig);
+    //req.setAttribute("tradeConfig", currentConfig);
     req.setAttribute("status", results);
     getServletConfig().getServletContext().getRequestDispatcher(CONFIG_PAGE)
         .include(req, resp);
@@ -112,11 +111,11 @@ public class TradeConfigServlet extends HttpServlet {
         doConfigDisplay(req, resp, result + "<b><br>Current DayTrader Configuration:</br></b>");
         return;
       } else if (action.equals("resetTrade")) {
-        doResetTrade(req, resp, "");
+        dbLoader.resetTrade(false);
+        result = "DayTrader Databases Reset - ";
+        doConfigDisplay(req, resp, result + "Current DayTrader Configuration:");
         return;
       } else if (action.equals("buildDB")) {
-        resp.setContentType("text/html");
-        //@TODO
         dbLoader.populateDB(resp.getWriter());
         result = "DayTrader Database Built - " + TradeConfig.getMaxUsers() + "users created";
       } else if (action.equals("buildDBTables")) {

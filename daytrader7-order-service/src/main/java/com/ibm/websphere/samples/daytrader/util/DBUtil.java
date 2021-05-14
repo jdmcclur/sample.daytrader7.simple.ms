@@ -255,10 +255,11 @@ public class DBUtil {
           Log.error(e,
               "DBUtil:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database");
         }
+        System.out.println("orders deleted\n\n");
         return;
       }
 
-      stmt = getStatement(conn, "delete from orderejb where accountId like 'ru:%')");
+      stmt = getStatement(conn, "delete from orderejb where accountId like 'ru:%'");
       stmt.executeUpdate();
       stmt.close();
 

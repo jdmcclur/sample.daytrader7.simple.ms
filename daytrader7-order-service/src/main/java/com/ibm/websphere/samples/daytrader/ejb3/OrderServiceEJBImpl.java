@@ -80,8 +80,8 @@ public class OrderServiceEJBImpl implements OrderService {
       if (Log.doTrace()) {
         Log.trace("TradeSLSBBean:sell", userId, holdingId);
       }
-
-      // TODO Call Holding Service to get Holding
+      
+      //1
       HoldingDataBean holding = holdingClient.getHolding(holdingId);
 
       if (holding == null) {
@@ -96,6 +96,7 @@ public class OrderServiceEJBImpl implements OrderService {
       }
 
       String quoteSymbol = holding.getQuoteSymbol();
+      // 2
       BigDecimal price = quoteClient.getQuotePrice(quoteSymbol);
 
       double quantity = holding.getQuantity();
@@ -115,6 +116,8 @@ public class OrderServiceEJBImpl implements OrderService {
 
       order.setOrderStatus("closed");
       order.setCompletionDate(new java.sql.Timestamp(System.currentTimeMillis()));
+
+      quoteClient.updateQuotePriceVolume(quoteSymbol, quantity, "sell");
 
     } catch (Exception e) {
       Log.error("TradeSLSBBean:sell(" + userId + "," + holdingId + ") --> failed", e);
@@ -234,6 +237,8 @@ public class OrderServiceEJBImpl implements OrderService {
       order.setOrderStatus("closed");
 
       order.setCompletionDate(new java.sql.Timestamp(System.currentTimeMillis()));
+
+      quoteClient.updateQuotePriceVolume(symbol, quantity, "buy");
 
     } catch (Exception e) {
       Log.error("TradeSLSBBean:buy(" + userId + "," + symbol + "," + quantity + ") --> failed", e);

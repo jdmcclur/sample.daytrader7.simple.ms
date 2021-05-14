@@ -67,9 +67,15 @@ public interface AccountClient {
       @FormParam("creditcard") String creditcard, @FormParam("openBalance") BigDecimal openBalance);
 
 
+  // DB ------
+
   @GET
   @Path("/db/createDB")
   public Response createDB();
+
+  @GET
+  @Path("/db/resetDB/{deleteAll}")
+  public Response resetDB(@PathParam("deleteAll") Boolean deleteAll);
 
 }
 

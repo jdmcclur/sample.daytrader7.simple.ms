@@ -241,15 +241,23 @@ public class DBUtil {
           stmt = getStatement(conn, "delete from accountejb");
           stmt.executeUpdate();
           stmt.close();
+          stmt = getStatement(conn, "delete from accountprofileejb");
+          stmt.executeUpdate();
+          stmt.close();
           conn.commit();
         } catch (Exception e) {
           Log.error(e,
               "DBUtil:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database");
         }
+        System.out.println("accounts deleted\n\n");
         return;
       }
 
       stmt = getStatement(conn, "delete from accountprofileejb where userid like 'ru:%'");
+      stmt.executeUpdate();
+      stmt.close();
+
+      stmt = getStatement(conn, "delete from accountejb where profile_userid like 'ru:%'");
       stmt.executeUpdate();
       stmt.close();
 

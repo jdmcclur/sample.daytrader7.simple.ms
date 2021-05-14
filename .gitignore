@@ -1,8 +1,12 @@
 /.apt_generated/
 /target/
+target/
 /build/
 /bin/
 .classpath
 .project
 /.settings/
+.settings/
+/.vscode
+.vscode/
 .DS_Store

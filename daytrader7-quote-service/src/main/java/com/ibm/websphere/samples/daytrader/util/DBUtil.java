@@ -255,6 +255,7 @@ public class DBUtil {
           Log.error(e,
               "DBUtil:resetTrade(deleteAll) -- Error deleting Trade users and stock from the Trade database");
         }
+        System.out.println("quotes deleted\n\n");
         return;
       }
       

@@ -26,6 +26,7 @@ import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * TradeServices interface specifies the business methods provided by the Trade
@@ -124,15 +125,6 @@ public interface TradeService {
   Collection<?> getAllQuotes() throws Exception;
 
   /**
-   * Update the stock quote price and volume for the specified stock symbol.
-   *
-   * @param symbol   for stock quote to update
-   * @param newPrice the updated quote price
-   * @return the QuoteDataBean describing the stock
-   */
-  QuoteDataBean updateQuotePriceVolume(String symbol, double sharesTraded) throws Exception;
-
-  /**
    * Return the portfolio of stock holdings for the specified customer as a
    * collection of HoldingDataBeans.
    *
@@ -214,4 +206,6 @@ public interface TradeService {
    * @return statistics for this benchmark run
    */
   RunStatsDataBean resetTrade(boolean deleteAll) throws Exception;
+
+  List<QuoteDataBean> getQuotes(String symbols);
 }

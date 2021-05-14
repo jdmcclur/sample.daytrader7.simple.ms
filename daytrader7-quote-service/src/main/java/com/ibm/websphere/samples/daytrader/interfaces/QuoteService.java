@@ -19,6 +19,7 @@ package com.ibm.websphere.samples.daytrader.interfaces;
 import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
 import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -56,6 +57,8 @@ public interface QuoteService {
    */
   QuoteDataBean getQuote(String symbol) throws Exception;
 
+  List<QuoteDataBean> getQuotes(String symbols);
+
   /**
    * Return a {@link java.util.Collection} of {@link QuoteDataBean} describing all
    * current quotes.
@@ -69,10 +72,9 @@ public interface QuoteService {
    *
    * @param symbol   for stock quote to update
    * @param newPrice the updated quote price
-   * @return the QuoteDataBean describing the stock
+   * @return the new price
    */
-  QuoteDataBean updateQuotePriceVolume(String symbol, double sharesTraded) throws Exception;
+  BigDecimal updateQuotePriceVolume(String symbol, double sharesTraded, String orderType) throws Exception;
 
-  MarketSummaryDataBean getMarketSummary();
-
+  MarketSummaryDataBean getMarketSummary(); 
 }
