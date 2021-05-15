@@ -90,7 +90,7 @@ public class QuoteRest {
   public BigDecimal updateQuotePriceVolume(
       @FormParam("symbol") String symbol, 
       @FormParam("sharesTraded") double sharesTraded,
-      @FormParam("orderType") String orderType) throws Exception {  
+      @FormParam("orderType") String orderType) throws Exception {
     return quoteService.updateQuotePriceVolume(symbol, sharesTraded, orderType);
   }
 

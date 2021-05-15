@@ -47,17 +47,31 @@ public interface OrderService {
    * @return OrderDataBean providing the status of the newly created sell order
    */
   OrderDataBean sell(String userID, Integer holdingID) throws Exception;
-  
+
+  /**
+   * Complete the Order identified by orderID. This method completes the order For
+   * a buy, the stock is purchased creating a holding and the users account is
+   * debited For a sell, the stock holding is removed and the users account is
+   * credited with the proceeds.
+   * 
+   * <p>The boolean twoPhase specifies to the server implementation whether or not
+   * the method is to participate in a global transaction
+   *
+   * @param orderID the Order to complete
+   * @return OrderDataBean providing the status of the completed order
+   */
+  OrderDataBean completeOrder(Integer orderID) throws Exception;
+
   /**
    * Cancel the Order identefied by orderID.
-   *
+   * 
    * <p>The boolean twoPhase specifies to the server implementation whether or not
    * the method is to participate in a global transaction
    *
    * @param orderID the Order to complete
    */
   void cancelOrder(Integer orderID) throws Exception;
-  
+
   /**
    * Get the collection of all orders for a given account.
    *

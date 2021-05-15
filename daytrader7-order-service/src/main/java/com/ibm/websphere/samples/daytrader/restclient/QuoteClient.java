@@ -18,6 +18,7 @@ package com.ibm.websphere.samples.daytrader.restclient;
 
 import java.math.BigDecimal;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -29,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+@ApplicationScoped
 @RegisterRestClient(configKey = "quoteClient")
 @Path("/")
 public interface QuoteClient {

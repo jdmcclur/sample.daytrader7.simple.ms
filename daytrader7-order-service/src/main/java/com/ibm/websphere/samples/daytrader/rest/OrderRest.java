@@ -19,6 +19,8 @@ package com.ibm.websphere.samples.daytrader.rest;
 import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
 import com.ibm.websphere.samples.daytrader.interfaces.OrderService;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -41,6 +43,12 @@ public class OrderRest {
   @Inject
   OrderService orderService;
 
+  @Inject
+  OrderCompleter orderCompleter;
+
+  @Inject @ConfigProperty(name = "COMPLETE_ORDERS_ASYNC", defaultValue = "true")
+  private Boolean completeOrderAsync;
+
   @POST
   @Path("/buy")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -49,7 +57,15 @@ public class OrderRest {
       @FormParam("userId") String userId, 
       @FormParam("symbol") String symbol, 
       @FormParam("quantity") double quantity) throws Exception {
-    return orderService.buy(userId, symbol, quantity);
+
+    OrderDataBean buyOrder =  orderService.buy(userId, symbol, quantity);
+
+    if (completeOrderAsync) {
+      orderCompleter.completeOrderAsync(buyOrder.getOrderID());
+      return buyOrder;
+    } 
+
+    return orderCompleter.completeOrderSync(buyOrder.getOrderID());
   }
   
   @POST
@@ -59,7 +75,15 @@ public class OrderRest {
   public OrderDataBean sell(
       @FormParam("userId")String userId, 
       @FormParam("holdingId") Integer holdingId) throws Exception {
-    return orderService.sell(userId, holdingId);
+        
+    OrderDataBean sellOrder =  orderService.sell(userId, holdingId);
+    
+    if (completeOrderAsync) {
+      orderCompleter.completeOrderAsync(sellOrder.getOrderID());
+      return sellOrder;
+    } 
+
+    return orderCompleter.completeOrderSync(sellOrder.getOrderID());
   }
   
   @GET

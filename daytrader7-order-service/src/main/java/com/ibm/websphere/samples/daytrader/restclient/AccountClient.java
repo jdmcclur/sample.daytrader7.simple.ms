@@ -18,6 +18,7 @@ package com.ibm.websphere.samples.daytrader.restclient;
 
 import java.math.BigDecimal;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -27,18 +28,17 @@ import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+@ApplicationScoped
 @RegisterRestClient(configKey = "accountClient")
 @Path("/")
 public interface AccountClient {  
-  
-  @Path("/updateAccountBalance")
+    
   @POST
+  @Path("/updateAccountBalance")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   @Produces(MediaType.APPLICATION_JSON)
   public BigDecimal updateAccountBalance(
       @FormParam("userId") String userId, 
       @FormParam("balanceUpdate") BigDecimal balanceUpdate);
-
-
 }
 

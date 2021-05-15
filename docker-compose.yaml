@@ -1,19 +1,6 @@
 version: "3.0"
 
 services:
-  
-  #daytrader7-nginx1:
-  #  container_name: daytrader7-nginx
-  #  networks:
-  #    - daytrader7
-  #  restart: always
-  #  build: ./nginx/
-  #  ports:
-  #    - "80:80"
-  #  volumes:
-  #    - /www/public
-  #  volumes_from:
-  #  - daytrader7-frontend-service
 
   daytrader7-frontend-service:
     build: ./daytrader7-frontend-service
@@ -49,6 +36,7 @@ services:
     networks:
       - daytrader7
     environment:
+      - COMPLETE_ORDERS_ASYNC=true
       - JVM_ARGS=-DaccountClient/mp-rest/url=http://daytrader7-account-service:9080/accounts -DholdingClient/mp-rest/url=http://daytrader7-holding-service:9080/holdings -DorderClient/mp-rest/url=http://daytrader7-order-service:9080/orders -DquoteClient/mp-rest/url=http://daytrader7-quote-service:9080/quotes
 
   daytrader7-quote-service:

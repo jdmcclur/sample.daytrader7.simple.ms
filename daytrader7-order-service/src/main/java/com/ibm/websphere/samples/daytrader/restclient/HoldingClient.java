@@ -20,6 +20,7 @@ import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
 
 import java.math.BigDecimal;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+@ApplicationScoped
 @RegisterRestClient(configKey = "holdingClient")
 @Path("/")
 public interface HoldingClient {  
@@ -38,7 +40,7 @@ public interface HoldingClient {
   @GET
   @Path("/getHolding/{holdingId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public HoldingDataBean getHolding(@PathParam("holdingId") Integer holdingId); 
+  public HoldingDataBean getHolding(@PathParam("holdingId") Integer holdingId);
 
   @POST
   @Path("/createHolding")
