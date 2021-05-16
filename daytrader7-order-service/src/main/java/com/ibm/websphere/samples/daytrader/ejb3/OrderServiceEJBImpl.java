@@ -16,12 +16,8 @@
 
 package com.ibm.websphere.samples.daytrader.ejb3;
 
-import com.ibm.websphere.samples.daytrader.entities.HoldingDataBean;
 import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
 import com.ibm.websphere.samples.daytrader.interfaces.OrderService;
-import com.ibm.websphere.samples.daytrader.restclient.AccountClient;
-import com.ibm.websphere.samples.daytrader.restclient.HoldingClient;
-import com.ibm.websphere.samples.daytrader.restclient.QuoteClient;
 import com.ibm.websphere.samples.daytrader.util.Log;
 
 import java.math.BigDecimal;
@@ -43,98 +39,46 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class OrderServiceEJBImpl implements OrderService {
 
+  private static final String BUY = "buy";
+  private static final String SELL = "sell";
+  private static final int ROUND = BigDecimal.ROUND_HALF_UP;
+  private static final int SCALE = 2;
+  private static final BigDecimal ORDER_FEE = new BigDecimal("24.95");
+
   @PersistenceContext
   private EntityManager entityManager;
 
   @Inject
-  @RestClient
-  HoldingClient holdingClient;
-
-  @Inject
-  @RestClient
-  AccountClient accountClient;
-
-  @Inject
-  @RestClient
-  QuoteClient quoteClient;
-
-  @Inject
   private Log logService;
 
-  public static final int ROUND = BigDecimal.ROUND_HALF_UP;
-  public static final int SCALE = 2;
-  private static final BigDecimal ORDER_FEE = new BigDecimal("24.95");
-
   @Override
-  public OrderDataBean buy(String userId, String symbol, double quantity) {
-    OrderDataBean order;
-
-    try {
-      if (logService.doTrace()) {
-        logService.trace("TradeSLSBBean:buy", userId, symbol, quantity);
-      }
-      // 1
-      BigDecimal price = quoteClient.getQuotePrice(symbol);
-      order = createOrder(userId, symbol, null, price, "buy", quantity);
-
-    } catch (Exception e) {
-      logService.error("TradeSLSBBean:buy(" + userId + "," + symbol + "," + quantity + ") --> failed", e);
-      /* On exception - cancel the order */
-      // TODO figure out how to do this with JPA
-      // if (order != null) order.cancel();
-      throw new EJBException(e);
+  public OrderDataBean buy(String userId, String symbol, double quantity, BigDecimal price) {
+    if (logService.doTrace()) {
+      logService.trace("OrderServiceEJBImpl:buy", userId, symbol, quantity, price);
     }
-    return order;
+    return createOrder(userId, symbol, null, price, BUY, quantity);
   }
 
   @Override
-  public OrderDataBean sell(final String userId, final Integer holdingId) {
-    OrderDataBean order;
+  public OrderDataBean sell(String userId, String symbol, Integer holdingId, BigDecimal price, double quantity) {
 
     try {
       if (logService.doTrace()) {
-        logService.trace("TradeSLSBBean:sell", userId, holdingId);
+        logService.trace("OrderServiceEJBImpl:sell", userId, holdingId);
       }
 
-      HoldingDataBean holding = holdingClient.getHolding(holdingId);
+      return createOrder(userId, symbol, holdingId, price, SELL, quantity);
 
-      if (holding == null) {
-        logService.error("OrderServiceEJBImpl:sell User " + userId + " attempted to sell holding " + holdingId
-            + " which has already been sold");
-
-        OrderDataBean orderData = new OrderDataBean();
-        orderData.setOrderStatus("cancelled");
-        entityManager.persist(orderData);
-
-        return orderData;
-      }
-
-      String quoteSymbol = holding.getQuoteSymbol();
-      double quantity = holding.getQuantity();
-
-      // 2
-      BigDecimal price = quoteClient.getQuotePrice(quoteSymbol);
-
-      order = createOrder(userId, quoteSymbol, holdingId, price, "sell", quantity);
-
-      // UPDATE the holding purchase data to signify this holding is
-      // "inflight" to be sold
-      // -- could add a new holdingStatus attribute to holdingEJB
-      // ToDo: holding.setPurchaseDate(new java.sql.Timestamp(0));
-
-      return order;
     } catch (Exception e) {
-      logService.error("TradeSLSBBean:sell(" + userId + "," + holdingId + ") --> failed", e);
+      logService.error("OrderServiceEJBImpl:sell(" + userId + "," + holdingId + ") --> failed", e);
       // if (order != null) order.cancel();
       // UPDATE - handle all exceptions like:
-      throw new EJBException("TradeSLSBBean:sell(" + userId + "," + holdingId + ")", e);
+      throw new EJBException("OrderServiceEJBImpl:sell(" + userId + "," + holdingId + ")", e);
     }
   }
 
@@ -145,28 +89,14 @@ public class OrderServiceEJBImpl implements OrderService {
 
     try {
       order = entityManager.find(OrderDataBean.class, orderId);
-      BigDecimal price = order.getPrice();
-      double quantity = order.getQuantity();
-
-      BigDecimal orderFee = order.getOrderFee();
-      BigDecimal balanceUpdate = (new BigDecimal(quantity).multiply(price)).subtract(orderFee);
-
-      accountClient.updateAccountBalance(order.getAccountId(), balanceUpdate);
-      quoteClient.updateQuotePriceVolume(order.getQuoteSymbol(), quantity, order.getOrderType());
-      if (order.getOrderType().equals("sell")) {
-        holdingClient.removeHolding(order.getHoldingId());
-      } else {
-        holdingClient.createHolding(order.getAccountId(), order.getQuoteSymbol(), quantity, order.getPrice());
-      }
-
       order.setOrderStatus("closed");
       order.setCompletionDate(new java.sql.Timestamp(System.currentTimeMillis()));
 
     } catch (Exception e) {
-      logService.error("TradeSLSBBean:completeOrder(" + orderId + ") --> failed", e);
+      logService.error("OrderServiceEJBImpl:completeOrder(" + orderId + ") --> failed", e);
       // if (order != null) order.cancel();
       // UPDATE - handle all exceptions like:
-      throw new EJBException("TradeSLSBBean:completeOrder(" + orderId + ")", e);
+      throw new EJBException("OrderServiceEJBImpl:completeOrder(" + orderId + ")", e);
     }
   
     return order;
@@ -175,7 +105,7 @@ public class OrderServiceEJBImpl implements OrderService {
   @Override
   public void cancelOrder(Integer orderID) {
     if (logService.doTrace()) {
-      logService.trace("TradeSLSBBean:cancelOrder", orderID);
+      logService.trace("OrderServiceEJBImpl:cancelOrder", orderID);
     }
 
     OrderDataBean order = entityManager.find(OrderDataBean.class, orderID);
@@ -185,7 +115,7 @@ public class OrderServiceEJBImpl implements OrderService {
   @Override
   public List<OrderDataBean> getOrders(String userId) {
     if (logService.doTrace()) {
-      logService.trace("TradeSLSBBean:getOrders", userId);
+      logService.trace("OrderServiceEJBImpl:getOrders", userId);
     }
 
     TypedQuery<OrderDataBean> q = entityManager.createNamedQuery("orderejb.findByAccountId", OrderDataBean.class);
@@ -195,7 +125,7 @@ public class OrderServiceEJBImpl implements OrderService {
   @Override
   public List<OrderDataBean> getClosedOrders(String userID) {
     if (logService.doTrace()) {
-      logService.trace("TradeSLSBBean:getClosedOrders", userID);
+      logService.trace("OrderServiceEJBImpl:getClosedOrders", userID);
     }
 
     try {
@@ -231,8 +161,8 @@ public class OrderServiceEJBImpl implements OrderService {
     } catch (
 
     Exception e) {
-      logService.error("TradeSLSBBean.getClosedOrders", e);
-      throw new EJBException("TradeSLSBBean.getClosedOrders - error", e);
+      logService.error("OrderServiceEJBImpl.getClosedOrders", e);
+      throw new EJBException("OrderServiceEJBImpl.getClosedOrders - error", e);
     }
   }
 
@@ -243,7 +173,7 @@ public class OrderServiceEJBImpl implements OrderService {
 
     if (logService.doTrace()) {
       logService.trace(
-          "TradeSLSBBean:createOrder(orderID=" + " account=" + ((accountId == null) ? null : accountId) + " quote="
+          "OrderServiceEJBImpl:createOrder(orderID=" + " account=" + ((accountId == null) ? null : accountId) + " quote="
               + ((quoteSymbol == null) ? null : quoteSymbol) + " orderType=" + orderType + " quantity=" + quantity);
     }
     try {
@@ -252,10 +182,15 @@ public class OrderServiceEJBImpl implements OrderService {
       entityManager.persist(order);
     } catch (Exception e) {
       logService.error(
-          "TradeSLSBBean:createOrder -- failed to create Order. The stock/quote may not exist in the database.", e);
+          "OrderServiceEJBImpl:createOrder -- failed to create Order. The stock/quote may not exist in the database.", e);
       throw new EJBException(
-          "TradeSLSBBean:createOrder -- failed to create Order. Check that the symbol exists in the database.", e);
+          "OrderServiceEJBImpl:createOrder -- failed to create Order. Check that the symbol exists in the database.", e);
     }
     return order;
+  }
+
+  @Override
+  public OrderDataBean getOrder(Integer orderId) {
+    return entityManager.find(OrderDataBean.class, orderId);
   }
 }

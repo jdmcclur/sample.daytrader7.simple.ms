@@ -19,8 +19,6 @@ package com.ibm.websphere.samples.daytrader.rest;
 import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
 import com.ibm.websphere.samples.daytrader.interfaces.OrderService;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -36,6 +34,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 @Path("/")
 @ApplicationScoped
 public class OrderRest {
@@ -44,7 +44,7 @@ public class OrderRest {
   OrderService orderService;
 
   @Inject
-  OrderCompleter orderCompleter;
+  OrderUtils orderUtils;
 
   @Inject @ConfigProperty(name = "COMPLETE_ORDERS_ASYNC", defaultValue = "true")
   private Boolean completeOrderAsync;
@@ -58,14 +58,14 @@ public class OrderRest {
       @FormParam("symbol") String symbol, 
       @FormParam("quantity") double quantity) throws Exception {
 
-    OrderDataBean buyOrder =  orderService.buy(userId, symbol, quantity);
+    OrderDataBean buyOrder =  orderUtils.doBuy(userId, symbol, quantity);
 
     if (completeOrderAsync) {
-      orderCompleter.completeOrderAsync(buyOrder.getOrderID());
+      orderUtils.doCompleteOrderAsync(buyOrder.getOrderID());
       return buyOrder;
     } 
 
-    return orderCompleter.completeOrderSync(buyOrder.getOrderID());
+    return orderUtils.doCompleteOrder(buyOrder.getOrderID());
   }
   
   @POST
@@ -75,15 +75,15 @@ public class OrderRest {
   public OrderDataBean sell(
       @FormParam("userId")String userId, 
       @FormParam("holdingId") Integer holdingId) throws Exception {
-        
-    OrderDataBean sellOrder =  orderService.sell(userId, holdingId);
+
+    OrderDataBean sellOrder =  orderUtils.doSell(userId, holdingId);
     
     if (completeOrderAsync) {
-      orderCompleter.completeOrderAsync(sellOrder.getOrderID());
+      orderUtils.doCompleteOrderAsync(sellOrder.getOrderID());
       return sellOrder;
     } 
 
-    return orderCompleter.completeOrderSync(sellOrder.getOrderID());
+    return orderUtils.doCompleteOrder(sellOrder.getOrderID());
   }
   
   @GET

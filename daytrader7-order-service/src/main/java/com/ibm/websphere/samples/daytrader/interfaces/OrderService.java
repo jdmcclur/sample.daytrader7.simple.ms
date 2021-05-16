@@ -18,6 +18,7 @@ package com.ibm.websphere.samples.daytrader.interfaces;
 
 import com.ibm.websphere.samples.daytrader.entities.OrderDataBean;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderService {
@@ -35,7 +36,7 @@ public interface OrderService {
    * @return OrderDataBean providing the status of the newly created buy order
    */
 
-  OrderDataBean buy(String userID, String symbol, double quantity) throws Exception;
+  OrderDataBean buy(String userID, String symbol, double quantity, BigDecimal price) throws Exception;
 
   /**
    * Sell a stock holding and removed the holding for the given user. Given a
@@ -46,7 +47,7 @@ public interface OrderService {
    * @param holdingID the users holding to be sold
    * @return OrderDataBean providing the status of the newly created sell order
    */
-  OrderDataBean sell(String userID, Integer holdingID) throws Exception;
+  OrderDataBean sell(String userId, String symbol, Integer holdingId, BigDecimal price, double quantity) throws Exception;
 
   /**
    * Complete the Order identified by orderID. This method completes the order For
@@ -88,5 +89,7 @@ public interface OrderService {
    * @return Collection OrderDataBeans providing detailed order information
    */
   List<OrderDataBean> getClosedOrders(String userID) throws Exception;
+
+  OrderDataBean getOrder(Integer orderId);
 
 }
