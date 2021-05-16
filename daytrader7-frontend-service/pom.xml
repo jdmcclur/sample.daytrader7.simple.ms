@@ -165,6 +165,17 @@
       <version>2.3.0</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.microprofile.reactive.messaging</groupId>
+      <artifactId>microprofile-reactive-messaging-api</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>2.7.0</version>
+    </dependency>
     <!-- Derby from https://mvnrepository.com/artifact/org.apache.derby/derby -->
     <dependency>
       <groupId>org.apache.derby</groupId>

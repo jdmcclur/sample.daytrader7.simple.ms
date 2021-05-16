@@ -44,6 +44,9 @@ public class QuoteRest {
   @Inject
   QuoteService quoteService;
 
+  @Inject
+  RecentQuotePriceChangeList changeList;
+
   @Path("/createQuote")
   @POST
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -91,7 +94,13 @@ public class QuoteRest {
       @FormParam("symbol") String symbol, 
       @FormParam("sharesTraded") double sharesTraded,
       @FormParam("orderType") String orderType) throws Exception {
-    return quoteService.updateQuotePriceVolume(symbol, sharesTraded, orderType);
+
+    BigDecimal price  = quoteService.updateQuotePriceVolume(symbol, sharesTraded, orderType);
+
+    QuoteDataBean quote = quoteService.getQuote(symbol);
+    changeList.add(quote);
+
+    return price;
   }
 
   @GET

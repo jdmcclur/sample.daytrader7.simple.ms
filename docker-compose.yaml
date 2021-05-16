@@ -2,6 +2,24 @@ version: "3.0"
 
 services:
 
+  daytrader7-zookeeper:
+    image: bitnami/zookeeper:3
+    container_name: daytrader7-zookeeper
+    networks:
+      - daytrader7
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  daytrader7-kafka:
+    image: bitnami/kafka:2
+    container_name: daytrader7-kafka
+    networks:
+      - daytrader7
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=daytrader7-zookeeper:2181 
+      - ALLOW_PLAINTEXT_LISTENER=yes 
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://daytrader7-kafka:9092
+
   daytrader7-frontend-service:
     build: ./daytrader7-frontend-service
     image: daytrader7-frontend-service
@@ -14,6 +32,7 @@ services:
       - JVM_ARGS=-DaccountClient/mp-rest/url=http://daytrader7-account-service:9080/accounts -DholdingClient/mp-rest/url=http://daytrader7-holding-service:9080/holdings -DorderClient/mp-rest/url=http://daytrader7-order-service:9080/orders -DquoteClient/mp-rest/url=http://daytrader7-quote-service:9080/quotes
       - MAX_QUOTES=100
       - MAX_USERS=100
+      - MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=daytrader7-kafka:9092
 
   daytrader7-account-service:
     build: ./daytrader7-account-service
@@ -45,6 +64,8 @@ services:
     container_name: daytrader7-quote-service
     networks:
       - daytrader7
+    environment:
+      - MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS=daytrader7-kafka:9092
 
 networks:
   daytrader7:

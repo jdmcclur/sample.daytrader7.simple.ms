@@ -17,15 +17,21 @@
 package com.ibm.websphere.samples.daytrader.web.websocket;
 
 import com.ibm.websphere.samples.daytrader.beans.MarketSummaryDataBean;
+import com.ibm.websphere.samples.daytrader.entities.QuoteDataBean;
 import com.ibm.websphere.samples.daytrader.interfaces.TradeService;
 import com.ibm.websphere.samples.daytrader.util.Log;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.websocket.CloseReason;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
@@ -35,14 +41,20 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.apache.kafka.common.serialization.Deserializer;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+
 /**
  * This class is a WebSocket EndPoint that sends the Market Summary in JSON form
  * when requested and sends stock price changes when received from an MDB
  * through a CDI event.
  */
 
-@ServerEndpoint(value = "/marketsummary", encoders = { MarketSummaryEncoder.class }, decoders = ActionDecoder.class)
+@ServerEndpoint(value = "/marketsummary", encoders = { MarketSummaryEncoder.class,
+    QuotePriceChangeListEncoder.class }, decoders = ActionDecoder.class)
 public class MarketSummaryWebSocket {
+
+  private static final Jsonb jsonb = JsonbBuilder.create();
 
   @Inject
   Log logService;
@@ -114,5 +126,29 @@ public class MarketSummaryWebSocket {
 
     sessions.remove(session);
 
+  }
+
+  @Incoming("recentquotepricechange")
+  public void receiveQuoteChanges(List<QuoteDataBean> recentQuotePriceChanges) {
+    Iterator<Session> failSafeIterator = sessions.iterator();
+    while (failSafeIterator.hasNext()) {
+      Session s = failSafeIterator.next();
+      if (s.isOpen()) {
+        s.getAsyncRemote().sendObject(recentQuotePriceChanges);
+      }
+    }
+  }
+
+  // end::jsonbSerializer[]// tag::jsonbDeSerializer[]
+  public static class QuoteChangeDeserializer implements Deserializer<CopyOnWriteArrayList<QuoteDataBean>> {
+    @Override
+    public CopyOnWriteArrayList<QuoteDataBean> deserialize(String topic, byte[] data) {
+      if (data == null) {
+        return null;
+      }
+
+      return jsonb.fromJson(new String(data), new CopyOnWriteArrayList<QuoteDataBean>() {
+      }.getClass().getGenericSuperclass());
+    }
   }
 }

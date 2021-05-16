@@ -2,7 +2,8 @@
   <featureManager>
     <feature>ejbLite-3.2</feature>
     <feature>jpa-2.2</feature>
-    <feature>microProfile-4.0</feature>
+    <feature>microProfile-3.3</feature>
+    <feature>mpReactiveMessaging-1.0</feature>
   </featureManager>
 
   <!-- allow reuse of 'busy' ports for fast server recycling on linux (where ports remain blocked for up to 2 mins after server stops) ${tradelite.http.port} set in bootstrap.properties -->

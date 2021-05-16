@@ -27,7 +27,6 @@ import com.ibm.websphere.samples.daytrader.restclient.AccountClient;
 import com.ibm.websphere.samples.daytrader.restclient.HoldingClient;
 import com.ibm.websphere.samples.daytrader.restclient.OrderClient;
 import com.ibm.websphere.samples.daytrader.restclient.QuoteClient;
-import com.ibm.websphere.samples.daytrader.util.FinancialUtils;
 import com.ibm.websphere.samples.daytrader.util.Log;
 import com.ibm.websphere.samples.daytrader.util.TradeConfig;
 
@@ -183,9 +182,7 @@ public class TradeAction implements TradeService {
     if (logService.doActionTrace()) {
       logService.trace("TradeAction:getOrders", userID);
     }
-    Collection<?> orderDataBeans = orderClient.getOrders(userID);
-
-    return orderDataBeans;
+    return orderClient.getOrders(userID);
   }
 
   /**
@@ -201,9 +198,7 @@ public class TradeAction implements TradeService {
       logService.trace("TradeAction:getClosedOrders", userID);
     }
 
-    Collection<?> orderDataBeans = orderClient.getClosedOrders(userID);
-
-    return orderDataBeans;
+    return orderClient.getClosedOrders(userID);
   }
 
   /**
@@ -235,7 +230,6 @@ public class TradeAction implements TradeService {
     }
 
     return quoteClient.getAllQuotes();
-
   }
 
   /**
@@ -249,13 +243,6 @@ public class TradeAction implements TradeService {
   public QuoteDataBean getQuote(String symbol) throws Exception {
     if (logService.doActionTrace()) {
       logService.trace("TradeAction:getQuote", symbol);
-    }
-    if ((symbol == null) || (symbol.length() == 0) || (symbol.length() > 10)) {
-      if (logService.doActionTrace()) {
-        logService.trace("TradeAction:getQuote   ---  primitive workload");
-      }
-      return new QuoteDataBean("Invalid symbol", "", 0.0, FinancialUtils.ZERO, FinancialUtils.ZERO, FinancialUtils.ZERO,
-          FinancialUtils.ZERO, 0.0);
     }
 
     return quoteClient.getQuote(symbol);
@@ -279,9 +266,7 @@ public class TradeAction implements TradeService {
       logService.trace("TradeAction:getHoldings", userID);
     }
 
-    Collection<?> holdingDataBeans = holdingClient.getHoldings(userID);
-
-    return holdingDataBeans;
+    return holdingClient.getHoldings(userID);
   }
 
   /**
@@ -310,9 +295,7 @@ public class TradeAction implements TradeService {
     if (logService.doActionTrace()) {
       logService.trace("TradeAction:getAccountData", userID);
     }
-    AccountDataBean accountData = accountClient.getAccountData(userID);
-
-    return accountData;
+    return accountClient.getAccountData(userID);
   }
 
   /**
@@ -325,9 +308,7 @@ public class TradeAction implements TradeService {
     if (logService.doActionTrace()) {
       logService.trace("TradeAction:getAccountProfileData", userID);
     }
-    AccountProfileDataBean accountProfileData = accountClient.getAccountProfileData(userID);
-
-    return accountProfileData;
+    return accountClient.getAccountProfileData(userID);
   }
 
   /**
@@ -342,8 +323,7 @@ public class TradeAction implements TradeService {
       logService.trace("TradeAction:updateAccountProfile", accountProfileData);
     }
 
-    accountProfileData = accountClient.updateAccountProfile(accountProfileData);
-    return accountProfileData;
+    return accountClient.updateAccountProfile(accountProfileData);
   }
 
   /**
@@ -373,7 +353,6 @@ public class TradeAction implements TradeService {
     }
 
     accountClient.logout(userID);
-
   }
 
   /**

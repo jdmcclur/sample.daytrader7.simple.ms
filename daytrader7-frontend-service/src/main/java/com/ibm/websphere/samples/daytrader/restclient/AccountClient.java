@@ -47,7 +47,6 @@ public interface AccountClient {
   @Produces(MediaType.APPLICATION_JSON)
   public AccountProfileDataBean getAccountProfileData(@PathParam("userId") String userId);
 
-  // TODO - check id?
   @POST
   @Path("/updateAccountProfile")
   @Consumes(MediaType.APPLICATION_JSON)
