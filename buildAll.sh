@@ -1,19 +1,19 @@
-cd daytrader7-account-service
+cd daytrader-account-service
 mvn clean package
 
-cd ../daytrader7-frontend-service
+cd ../daytrader-frontend-service
 mvn clean package
 
-cd ../daytrader7-holding-service
+cd ../daytrader-holding-service
 mvn clean package
 
-cd ../daytrader7-order-service
+cd ../daytrader-order-service
 mvn clean package
 
-cd ../daytrader7-quote-service
+cd ../daytrader-quote-service
 mvn clean package
 
-NETWORK_NAME=daytrader7
+NETWORK_NAME=daytrader
 VOLUME_NAME_ACCOUNTS=daytrader-db2data-accounts
 VOLUME_NAME_HOLDINGS=daytrader-db2data-holdings
 VOLUME_NAME_ORDERS=daytrader-db2data-orders

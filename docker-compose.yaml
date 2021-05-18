@@ -2,50 +2,50 @@ version: "3.0"
 
 services:
 
-  daytrader7-frontend-service:
-    build: ./daytrader7-frontend-service
-    image: daytrader7-frontend-service
-    container_name: daytrader7-frontend-service
+  daytrader-frontend-service:
+    build: ./daytrader-frontend-service
+    image: daytrader-frontend-service
+    container_name: daytrader-frontend-service
     networks:
-      - daytrader7
+      - daytrader
     ports:
       - "9080:9080"
     environment:
-      - JVM_ARGS=-DaccountClient/mp-rest/url=http://daytrader7-account-service:9080/accounts -DholdingClient/mp-rest/url=http://daytrader7-holding-service:9080/holdings -DorderClient/mp-rest/url=http://daytrader7-order-service:9080/orders -DquoteClient/mp-rest/url=http://daytrader7-quote-service:9080/quotes
+      - JVM_ARGS=-DaccountClient/mp-rest/url=http://daytrader-account-service:9080/accounts -DholdingClient/mp-rest/url=http://daytrader-holding-service:9080/holdings -DorderClient/mp-rest/url=http://daytrader-order-service:9080/orders -DquoteClient/mp-rest/url=http://daytrader-quote-service:9080/quotes
       - MAX_QUOTES=100
       - MAX_USERS=100
 
-  daytrader7-account-service:
-    build: ./daytrader7-account-service
-    image: daytrader7-account-service
-    container_name: daytrader7-account-service
+  daytrader-account-service:
+    build: ./daytrader-account-service
+    image: daytrader-account-service
+    container_name: daytrader-account-service
     networks:
-      - daytrader7
+      - daytrader
 
-  daytrader7-holding-service:
-    build: ./daytrader7-holding-service
-    image: daytrader7-holding-service
-    container_name: daytrader7-holding-service
+  daytrader-holding-service:
+    build: ./daytrader-holding-service
+    image: daytrader-holding-service
+    container_name: daytrader-holding-service
     networks:
-      - daytrader7
+      - daytrader
 
-  daytrader7-order-service:
-    build: ./daytrader7-order-service
-    image: daytrader7-order-service
-    container_name: daytrader7-order-service
+  daytrader-order-service:
+    build: ./daytrader-order-service
+    image: daytrader-order-service
+    container_name: daytrader-order-service
     networks:
-      - daytrader7
+      - daytrader
     environment:
       - COMPLETE_ORDERS_ASYNC=true
-      - JVM_ARGS=-DaccountClient/mp-rest/url=http://daytrader7-account-service:9080/accounts -DholdingClient/mp-rest/url=http://daytrader7-holding-service:9080/holdings -DorderClient/mp-rest/url=http://daytrader7-order-service:9080/orders -DquoteClient/mp-rest/url=http://daytrader7-quote-service:9080/quotes
+      - JVM_ARGS=-DaccountClient/mp-rest/url=http://daytrader-account-service:9080/accounts -DholdingClient/mp-rest/url=http://daytrader-holding-service:9080/holdings -DorderClient/mp-rest/url=http://daytrader-order-service:9080/orders -DquoteClient/mp-rest/url=http://daytrader-quote-service:9080/quotes
 
-  daytrader7-quote-service:
-    build: ./daytrader7-quote-service
-    image: daytrader7-quote-service
-    container_name: daytrader7-quote-service
+  daytrader-quote-service:
+    build: ./daytrader-quote-service
+    image: daytrader-quote-service
+    container_name: daytrader-quote-service
     networks:
-      - daytrader7
+      - daytrader
 
 networks:
-  daytrader7:
+  daytrader:
     external: true
