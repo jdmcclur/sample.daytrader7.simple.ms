@@ -1,11 +1,13 @@
-# sample.daytrader7.simple.ms
-Attempt at MicroServices version of daytrader7
+# DaytraderMS
+Attempt at MicroServices version of Daytrader
 
+![alt text]( https://github.com/jdmcclur/sample.daytrader7.simple.ms/blob/main/images/dt-ms.png "Daytrader MS")
+           
 # Prereqs
     git
     Maven
     JDK
-    Docker/docker-compose
+    docker / docker-compose
     
 ## Download
 ```
