@@ -17,10 +17,12 @@
 package com.ibm.websphere.samples.daytrader.web;
 
 import com.ibm.websphere.samples.daytrader.interfaces.TradeService;
+import com.ibm.websphere.samples.daytrader.util.ClosedOrdersCache;
 import com.ibm.websphere.samples.daytrader.util.Log;
 import com.ibm.websphere.samples.daytrader.util.TradeConfig;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -36,13 +38,17 @@ import javax.servlet.http.HttpServletRequest;
 @WebFilter(filterName = "OrdersAlertFilter", urlPatterns = "/app")
 public class OrdersAlertFilter implements Filter {
 
-  @Inject 
+  @Inject
   TradeService tradeService;
 
-  @Inject 
+  @Inject
   Log logService;
 
-  @Inject TradeConfig configService;
+  @Inject
+  TradeConfig configService;
+
+  private static ClosedOrdersCache closedOrderCache = new ClosedOrdersCache(1000 * 60 * 5);
+  private static Long updateTimeout = new Long(1000 * 10);
 
   /**
    * Constructor for CompletedOrdersAlertFilter.
@@ -86,13 +92,18 @@ public class OrdersAlertFilter implements Filter {
             }
 
             if ((userID != null) && (userID.trim().length() > 0)) {
-              
-              Collection<?> closedOrders = tradeService.getClosedOrders(userID);
-              if ((closedOrders != null) && (closedOrders.size() > 0)) {
-                req.setAttribute("closedOrders", closedOrders);
-              }
-              if (logService.doTrace()) {
-                logService.printCollection("OrderAlertFilter: userID=" + userID + " closedOrders=", closedOrders);
+
+              Long lastUpdate = (Long) closedOrderCache.get(userID);
+              Long currentTime = ZonedDateTime.now().toInstant().toEpochMilli();
+              if (lastUpdate == null || currentTime - lastUpdate > updateTimeout) {
+                Collection<?> closedOrders = tradeService.getClosedOrders(userID);
+                if ((closedOrders != null) && (closedOrders.size() > 0)) {
+                  req.setAttribute("closedOrders", closedOrders);
+                }
+                if (logService.doTrace()) {
+                  logService.printCollection("OrderAlertFilter: userID=" + userID + " closedOrders=", closedOrders);
+                }
+                closedOrderCache.put(userID, currentTime);
               }
             }
           }
